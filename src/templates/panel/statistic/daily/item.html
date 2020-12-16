@@ -1,0 +1,118 @@
+{% load static %}{% load i18n %}
+{% if same_day is False %} <hr/> {% endif %}
+<style>
+.table td, .table th {
+    border-top: 1px solid #6a6b6c;
+}
+</style>
+{% if count_i == 1 and currencies_list_i == 1 %}
+    <hr/>
+    <h2 class="text-center">Gündəlik</h2>
+    <hr/>
+{% endif %}
+<div class="table-responsive">
+  <!--Table-->
+  <table class="table table-striped" style="{% if same_day %} margin-bottom: 0;{% endif %}">
+
+    <!--Table head-->
+    <thead>
+    {% autoescape off %}
+        {{ head_text }}
+    {% endautoescape %}
+
+    </thead>
+    <!--Table head-->
+
+    <!--Table body-->
+    <tbody>
+      <tr style="background: #dbdada;">
+        <th scope="row">Ayın əvvəli portfel</th>
+        {% autoescape off %}
+            {{ before_month_portfel }}
+        {% endautoescape %}
+
+      </tr>
+      <tr style="background: #dbdada;">
+        <th scope="row">Günün əvvəli portfel</th>
+        {% autoescape off %}
+            {{ before_month_day_portfel }}
+        {% endautoescape %}
+      </tr>
+      <tr style="background: #dbdada;">
+        <th scope="row">Günün əvvəli kassa</th>
+        {% autoescape off %}
+            {{ before_month_day_cash }}
+        {% endautoescape %}
+      </tr>
+      <tr >
+        <th scope="row" style="background: #0a8dd3;    color: #fff;">Verilən</th>
+        {% autoescape off %}
+            {{ given_packages_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th scope="row" style="background: red;    color: #fff;">Qayıdan</th>
+        {% autoescape off %}
+            {{ get_package_dates_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th scope="row" style="background: forestgreen;    color: #fff;">Faiz</th>
+        {% autoescape off %}
+            {{ get_package_dates_debt_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th style="background: #dbdada;" scope="row">Cərimə</th>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+      </tr>
+      <tr style="background: #f6f6f6;">
+        <th style="background: #dbdada;"  scope="row">Xərclər</th>
+        {% autoescape off %}
+            {{ daily_outcome_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th style="background: #dbdada;" scope="row">Ofis verən</th>
+        {% autoescape off %}
+            {{ office_income_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th style="background: #dbdada;"  scope="row">Ofis geri alan</th>
+        {% autoescape off %}
+            {{ office_outcome_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th style="background: #dbdada;"  scope="row">kassa günün sonu</th>
+        {% autoescape off %}
+            {{ last_month_day_cash }}
+        {% endautoescape %}
+
+      </tr>
+      <tr style="background: {{ color.1 }};" >
+        <th scope="row">Portfel günün sonu</th>
+        {% autoescape off %}
+            {{ last_month_day_portfel }}
+        {% endautoescape %}
+      </tr>
+      <tr  style="background: #dbdada;" >
+        <th scope="row">Portfeldə fərq günlük</th>
+        {% autoescape off %}
+            {{ difference_month_day_portfel }}
+        {% endautoescape %}
+      </tr>
+      <tr style="background: aliceblue;" >
+        <th scope="row">Portfeldə fərq aylıq</th>
+        {% autoescape off %}
+            {{ difference_month_portfel }}
+        {% endautoescape %}
+      </tr>
+    </tbody>
+    <!--Table body-->
+  </table>
+  <!--Table-->
+</div>

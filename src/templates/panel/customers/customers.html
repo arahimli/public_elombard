@@ -1,0 +1,242 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+{% trans 'Müştəri siyahısı' %}
+{% endblock %}
+{% block css_block %}
+<style>
+  .customer-search-all-div tbody {
+      display:block;
+      max-height:350px;
+      overflow-y:auto;
+  }
+  .customer-search-all-div thead, .customer-search-all-div tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;
+  }
+  .customer-search-all-div thead {
+      width: calc( 100% - 1em )
+  }
+
+#main-data-content-div { overflow: auto; height: 500px; }
+#main-data-content-div thead th { position: sticky; top: 0; }
+
+/* Just common table stuff. Really. */
+#main-data-content-div table  { border-collapse: collapse; width: 100%; }
+{# #main-data-content th, td { padding: 8px 16px; } #}
+#main-data-content-div th     { background:#eee; }
+
+</style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {{ title }}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {{ title }}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+
+
+            <div class="row">
+
+                <div class="col-xl-12" id="customer-search-all-div">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">{% trans 'Paket filteri' %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="customer-search-form" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-user"></i></span>
+                                        {{ search_form.full_name }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-sort-numeric-asc"></i></span>
+                                            {{ search_form.serial_number }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                        {{ search_form.fin }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-location-arrow"></i></span>
+                                            {{ search_form.address }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-percent"></i></span>
+                                            {{ search_form.id_number }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-check"></i></span>
+                                            {{ search_form.status }}
+                                        </div>
+                                    </div>
+                                    {% if base_profile.usertype != 2 %}
+                                    <div class="col-md-6 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-check"></i></span>
+                                            {{ search_form.gender }}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <div class="col-md-6 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-image"></i></span>
+                                            {{ search_form.show_photo }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12"><hr></div>
+                                    <input type="hidden" name="page-num" id="page-num" value="1"/>
+                                </div>
+                            </form>
+                            <hr/>
+                            <a class="btn btn-success " style="width: 100%;text-align:center;"  href="javascript:void(0);" onclick="searchForm();"> {% trans 'Axtar' %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {{ title }}
+                                </h4>
+                                <hr/>
+                                <a class="btn btn-success" href="{% url 'panel:customer-create' %}"> {% trans 'Əlavə et' %}</a>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-x: auto;padding: 0;" id="main-data-content-div">
+                            <div style="width: 100%;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('customers');
+    </script>
+
+
+    <script type="text/javascript">
+        
+        $( "#customer-search-form :input" ).keyup(function(event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                searchForm();
+            }
+        });
+    </script>
+
+
+    <script>
+        var search_form = $('#customer-search-form');
+        var main_data_content = $('#main-data-content-div');
+        $( document ).ready(function() {
+            searchForm();
+        });
+        function searchForm() {
+            $('#page-num').val(1);
+            main_data_content.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+          $.post('',search_form.serialize())
+              .done(function (result) {
+                  main_data_content.html(result['main_result']);
+                  $('#page-num').val(2);
+            }).fail(function () {
+                  main_data_content.html('');
+          });
+        }
+    </script>
+
+
+
+
+    <script>
+        var is_active = true;
+        var has_data = true;
+            $('#main-data-content-div').on('scroll', function() {
+                console.log("-------------------------------------------------------------------------------");
+                if ($(this).scrollTop() +
+                    $(this).innerHeight()>=
+                    $(this)[0].scrollHeight && is_active && has_data) {
+                    infinityForm();
+                    // alert('End of DIV is reached!');
+                }
+            });
+
+
+        function infinityForm() {
+            is_active = false;
+              $.post('',search_form.serialize())
+                  .done(function (result) {
+                      $('#main-data-content-div tbody').append(result['main_result']);
+                      if(result['main_result'] != ''){
+                          $('#page-num').val(parseInt($('#page-num').val()) + 1);
+                      }else{
+                          has_data = false;
+                      }
+                      is_active = true;
+
+                      console.log(result)
+                }).fail(function () {
+                    is_active = true;
+              });
+         }
+    </script>
+
+
+
+{% endblock %}

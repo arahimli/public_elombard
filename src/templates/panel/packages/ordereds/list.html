@@ -1,0 +1,127 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Sifariş edilən paketlər" %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Sifariş edilən paketlər" %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Sifariş edilən paketlər" %}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans 'Müştəri' %}</th>
+                                        <th>{% trans 'Məbləğ' %}</th>
+                                        <th>{% trans 'Qalıq məbləği' %}</th>
+                                        <th>{% trans 'Department' %}</th>
+                                        <th>{% trans 'Çatdırıldı' %}?</th>
+                                        <th>{% trans 'Növ' %}</th>
+                                        <th>{% trans 'Status' %}</th>
+                                        <th>{% trans 'Tarixi' %}</th>
+                                        <th>/</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for ordered_package_item in ordered_packages %}
+                                    <tr>
+                                        <td>{{ ordered_package_item.package.customer.full_name }}</td>
+                                        <td>{{ ordered_package_item.package.amount }} {{ ordered_package_item.package.currency.short_title }}</td>
+                                        <td>{{ ordered_package_item.package.debt_amount }} {{ ordered_package_item.package.currency.short_title }}</td>
+                                        <td>{{ ordered_package_item.package.department.title }}</td>
+                                        <td>
+                                            {% if ordered_package_item.accepted %}
+                                                <button class="btn btn-icon btn-round btn-success btn-xs">
+                                                    bəli
+                                                </button>
+                                            {% else %}
+                                                <button class="btn btn-icon btn-round btn-danger btn-xs">
+                                                    xeyr
+                                                </button>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ ordered_package_item.package.packet_type.title }}</td>
+                                        <td>{{ ordered_package_item.package.status.title }}</td>
+                                        <td>{{ ordered_package_item.package.date }}</td>
+                                        <td>
+                                            <a href="{% url 'panel:package-ordered-edit' ordered_package_item.id %}" class="btn btn-square btn-info">
+                                                <i class="fa fa-pencil-square-o"></i> Dəyiş
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>{% trans 'Müştəri' %}</th>
+                                        <th>{% trans 'Məbləğ' %}</th>
+                                        <th>{% trans 'Qalıq məbləği' %}</th>
+                                        <th>{% trans 'Department' %}</th>
+                                        <th>{% trans 'Növ' %}</th>
+                                        <th>{% trans 'Status' %}</th>
+                                        <th>{% trans 'Tarixi' %}</th>
+                                        <th>/</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('packages');
+    </script>
+
+
+
+{% endblock %}

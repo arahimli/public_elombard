@@ -1,0 +1,97 @@
+{% load static %}{% load i18n %}{% load static %}
+{% if same_day is False %} <hr/> {% endif %}
+<style>
+.table td, .table th {
+    border-top: 1px solid #6a6b6c;
+}
+</style>
+<div class="table-responsive">
+  <!--Table-->
+  <table class="table table-striped" style="{% if same_day %} margin-bottom: 0;{% endif %}">
+
+    <!--Table head-->
+    <thead>
+    {% autoescape off %}
+        {{ head_text }}
+    {% endautoescape %}
+
+    </thead>
+    <!--Table head-->
+
+    <!--Table body-->
+    <tbody>
+      <tr style="background: yellow;">
+        <th scope="row">Ayın əvvəli portfel</th>
+        {% autoescape off %}
+            {{ before_month_portfel }}
+        {% endautoescape %}
+
+      </tr>
+      <tr >
+        <th scope="row" style="background: #0a8dd3;    color: #fff;">Verilən</th>
+        {% autoescape off %}
+            {{ given_packages_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th scope="row" style="background: red;    color: #fff;">Qayıdan</th>
+        {% autoescape off %}
+            {{ get_package_dates_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th scope="row" style="background: forestgreen;    color: #fff;">Faiz</th>
+        {% autoescape off %}
+            {{ get_package_dates_debt_html }}
+        {% endautoescape %}
+      </tr>
+
+      <tr>
+        <th style="background: yellow;" scope="row">Cərimə</th>
+          {% for department_list_item in department_list %}
+              <td style="background: {{ color.0 }};">0</td>
+          {% endfor %}
+          <td style="background: yellow;" >0</td>
+      </tr>
+      <tr style="background: #f6f6f6;">
+        <th  style="background: yellow;"  scope="row">Xərclər</th>
+        {% autoescape off %}
+            {{ this_month_income_outcome_objs_general_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th  style="background: yellow;" scope="row">Ofis verən</th>
+        {% autoescape off %}
+            {{ this_month_income_outcome_objs_give_office_html }}
+        {% endautoescape %}
+      </tr>
+      <tr>
+        <th  style="background: yellow;"  scope="row">Ofis geri alan</th>
+        {% autoescape off %}
+            {{ this_month_income_outcome_objs_get_office_html }}
+        {% endautoescape %}
+      </tr>
+      <tr style="background: yellow;">
+        <th  scope="row">kassa</th>
+        {% autoescape off %}
+            {{ end_month_cash_html }}
+        {% endautoescape %}
+
+      </tr>
+      <tr  style="background: yellow;" >
+        <th scope="row">Portfel ayın sonu</th>
+        {% autoescape off %}
+            {{ end_month_portfel }}
+        {% endautoescape %}
+      </tr>
+      <tr  style="background: #dbdada;" >
+        <th scope="row">Portfeldə aylıq fərq</th>
+        {% autoescape off %}
+            {{ difference_month_portfel_html }}
+        {% endautoescape %}
+      </tr>
+    </tbody>
+    <!--Table body-->
+  </table>
+  <!--Table-->
+</div>

@@ -1,0 +1,195 @@
+{% extends 'panel-base.html' %}
+{% load static %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-lg-flex flex-nowrap align-items-center">
+                        <div class="page-title mr-4 pr-4 border-right">
+                            <h1>Profil</h1>
+                        </div>
+                        <div class="breadcrumb-bar align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href=""><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        Profil
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-sm-3">
+                    <a href="{% url 'panel:customer-list-type' 'all' %}" target="_blank" class="card text-center">
+                        <div class="card-body">
+                            <h4 class="card-title">Müştərilər</h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="{% url 'panel:customer-create' %}" target="_blank" class="card text-center">
+                        <div class="card-body">
+                            <h4 class="card-title">Müştəri əlavə et</h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="{% url 'panel:package-list' %}" target="_blank" class="card text-center">
+                        <div class="card-body">
+                            <h4 class="card-title">Paketlər</h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="{% url 'panel:package-create' %}" target="_blank" class="card text-center">
+                        <div class="card-body">
+                            <h4 class="card-title">Paket əlavə et</h4>
+                        </div>
+                    </a>
+                </div>
+                {% if base_profile.usertype == 1 %}
+                    <div class="col-sm-3">
+                        <a href="{% url 'panel:statistic-type' 'monthly' %}" target="_blank" class="card text-center">
+                            <div class="card-body">
+                                <h4 class="card-title">Aylıq Statistika</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="{% url 'panel:statistic-type' 'customers' %}" target="_blank" class="card text-center">
+                            <div class="card-body">
+                                <h4 class="card-title">Müştərilər Statistika</h4>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a href="{% url 'panel:statistic-type' 'general' %}" target="_blank" class="card text-center">
+                            <div class="card-body">
+                                <h4 class="card-title">Ümumi Statistika</h4>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <hr/>
+                    <h2 class="text-center">
+                        Annuitet
+                    </h2>
+                    <hr/>
+                </div>
+                <div class="col-md-12">
+
+                    <form id="annuitet-calculate-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Kerdit Məbləği</td>
+                                            <td>{{ annuitet_calculated_form.amount }}</td>
+                                            <td>Aylıq ödəniş</td>
+                                            <td id="middle_amount">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aylıq faiz</td>
+                                            <td>{{ annuitet_calculated_form.percent }}</td>
+                                            <td>Ümumi faiz</td>
+                                            <td id="general_percent">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Müddət</td>
+                                            <td>{{ annuitet_calculated_form.month_count }}</td>
+                                            <td>Effektiv faiz</td>
+                                            <td id="effective_percent">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tarix</td>
+                                            <td>{{ annuitet_calculated_form.a_first_date }}</td>
+                                            <td></td>
+                                            <td id="effective_percent"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" onclick="calculateAnnuitet('{% url 'panel:general-annuitet' %}')" class="btn btn-success">
+                                    Hesabla
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <hr/>
+                    <div class="" id="annuitet-result-table">
+                    </div>
+                </div>
+            </div>
+            <!-- event Modal -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+
+
+    <script>
+
+      $("#id_a_first_date").inputmask();
+        var annuitet_calculate_form = $('#annuitet-calculate-form');
+        var annuitet_result_table = $('#annuitet-result-table');
+        var middle_amount = $('#middle_amount');
+        var effective_percent = $('#effective_percent');
+        var general_percent = $('#general_percent');
+
+        function calculateAnnuitet($url) {
+            annuitet_result_table.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            {#console.log(annuitet_calculate_form.serialize());#}
+            {#alert(annuitet_calculate_form.serialize());#}
+              $.post($url,annuitet_calculate_form.serialize())
+                .done(function (result) {
+                    if(result['code'] == 'success'){
+                        annuitet_result_table.html(result['result']);
+                        middle_amount.html(result['middle_amount']);
+                        general_percent.html(result['general_percent']);
+                        effective_percent.html(result['effective_percent']);
+                    }else{
+                        annuitet_result_table.html('');
+                        middle_amount.html(0);
+                        general_percent.html(0);
+                        effective_percent.html(0);
+                    }
+                });
+        }
+    </script>
+
+{% endblock %}

@@ -1,0 +1,109 @@
+    <tr>
+        <td>{{ data_item.date|date:'d.m.Y H:i' }}</td>
+        <td>{{ data_item.get_type }}</td>
+        <td>
+                {% if data_item.package %}
+                    <a target="_blank" href="{% url 'panel:package-edit' data_item.package_id %}">
+                        {{ data_item.package.pledge_number }}
+                    </a>
+                {% elif data_item.package_payment_date %}
+                    {% if data_item.package_payment_date.user %}
+                        <a target="_blank" href="{% url 'panel:employee-edit' data_item.package_payment_date.user_id %}">
+                            {{ data_item.package_payment_date.user.first_name }} {{ data_item.package_payment_date.user.last_name }}
+                        </a>
+                    {% else %}
+                        <a target="_blank" href="{% url 'panel:package-edit' data_item.package_payment_date.package_id %}">
+                            {{ data_item.package_payment_date.package.pledge_number }}
+                        </a>
+                    {% endif %}
+                {% elif data_item.reason == 'income' %}
+                    {% if data_item.type == 'office' %}
+                        {% if data_item.package_payment_date.user %}
+                            <a target="_blank" href="{% url 'panel:employee-edit' data_item.package_payment_date.user_id %}">
+                                {{ data_item.package_payment_date.user.first_name }} {{ data_item.package_payment_date.user.last_name }}
+                            </a>
+                        {% else %}
+                            <a target="_blank" href="{% url 'panel:package-edit' data_item.package_payment_date.package_id %}">
+                                {{ data_item.package_payment_date.package.pledge_number }}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                {% elif data_item.reason == 'outcome' %}
+                    {% if data_item.type == 'office' %}
+                        Ofis
+                    {% else %}
+                        {% if data_item.outcome_type %}{{ data_item.outcome_type.title }}{% endif %}
+                    {% endif %}
+                {% endif %}
+        </td>
+        <td>
+                {% if data_item.package %}
+                    {% if data_item.package.user %}
+                        <a target="_blank" href="{% url 'panel:employee-edit' data_item.package.user_id %}">
+                            {{ data_item.package.user.first_name }} {{ data_item.package.user.last_name }}
+                        </a>
+                    {% endif %}
+                {% elif data_item.package_payment_date %}
+                    {% if data_item.package_payment_date %}
+                        <a target="_blank" href="{% url 'panel:package-edit' data_item.package_payment_date.package_id %}">
+                            {{ data_item.package_payment_date.package.pledge_number }}
+                        </a>
+                    {% elif data_item.package_payment_date.user %}
+                        <a target="_blank" href="{% url 'panel:employee-edit' data_item.package_payment_date.user_id %}">
+                            {{ data_item.package_payment_date.user.first_name }} {{ data_item.package_payment_date.user.last_name }}
+                        </a>
+                    {% endif %}
+                {% elif data_item.reason == 'income' %}
+                    {% if data_item.type == 'office' %}
+                        Ofis
+                    {% endif %}
+                {% elif data_item.reason == 'outcome' %}
+                    {% if data_item.type == 'office' %}
+                    {% elif data_item.user %}
+                        <a target="_blank" href="{% url 'panel:employee-edit' data_item.package_payment_date.user_id %}">
+                            {{ data_item.user.first_name }} {{ data_item.user.last_name }}
+                        </a>
+                    {% else %}
+                        {% if data_item.outcome_type %}{{ data_item.outcome_type.title }}{% endif %}
+                    {% endif %}
+                {% endif %}
+        </td>
+        <td>
+            {% if data_item.reason == 'income' %}
+                {{ data_item.get_amount_currency }}
+            {% endif %}
+        </td>
+        <td>
+            {% if data_item.reason == 'outcome' %}
+                {{ data_item.get_amount_currency }}
+            {% endif %}
+        </td>
+        <td>
+            {% if data_item.reason == 'outcome' %}
+                {% if data_item.outcome_type %}
+                    {{ data_item.outcome_type.title }}
+                    <hr/>
+                {% endif %}
+                {% if data_item.outcome_name %}
+                    - {{ data_item.outcome_name.title }}
+                    <hr/>
+                {% endif %}
+                {% if data_item.outcome_type2 %}
+                    - {{ data_item.outcome_type2.title }}
+                    <hr/>
+                {% endif %}
+            {% endif %}
+            {% if data_item.package_payment_date %}
+                {{ data_item.package_payment_date.description }}
+            {% elif data_item.package %}
+                {{ data_item.package.description }}
+            {% else %}
+                {{ data_item.description }}
+            {% endif %}
+            </td>
+        <td>
+            <a href="{% url 'panel:income-outcome-edit' o_slug data_item.id %}" class="btn btn-icon btn-square btn-warning">
+                <i class="fa fa-edit"></i>
+            </a>
+        </td>
+    </tr>

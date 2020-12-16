@@ -1,0 +1,45 @@
+{% load static %}{% load i18n %}
+
+    <style>
+    .dt-buttons .dt-button{
+        padding:.5rem 1.6rem!important;
+        border-radius: 5px;
+        border:none;
+        cursor: pointer;
+        background: #8d8d8d;
+        color:#fff!important
+    }
+    .dt-buttons .dt-button:hover{
+        border:none;
+        background: #3a3d44;
+        color:#fff!important
+    }
+
+    </style>
+
+
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>N</th>
+            <th>{% trans 'Ad soyad' %}</th>
+            <th>{% trans 'Fin kod' %}</th>
+            {% if show_photo == 'show' %}
+                <th>{% trans 'Foto' %}</th>
+            {% endif %}
+            <th>{% trans 'Seriya nömrəsi' %}</th>
+{#            <th>{% trans 'İd nömrəsi' %}</th>#}
+            <th>{% trans 'Status' %}</th>
+            <th>{% trans 'Kontakt nömrəsi' %}</th>
+            <th>{% trans 'Doğum tarixi' %}</th>
+            <th>{% trans 'Aktiv' %}</th>
+            <th>{% trans 'Hamısı' %}</th>
+            <th>/</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% autoescape off %}
+        {{ list_html }}
+    {% endautoescape %}
+    </tbody>
+</table>

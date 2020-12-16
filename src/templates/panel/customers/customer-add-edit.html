@@ -1,0 +1,441 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+    <style>
+        .input-group-cus>.form-control{
+            flex: 0.2 0 auto;
+        }
+        .customer-phone-address{
+            padding: 5px 0;
+        }
+    </style>
+
+
+
+{#		<link rel="stylesheet" href="{% static 'main/assets/cropper/bootstrap.min.css' %}" />#}
+		<link rel="stylesheet" href="{% static 'main/assets/cropper/croppie.css' %}" />
+
+{% endblock %}
+{% block content_block %}
+
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Müştəri" %} {% if customer_obj %} - {{ customer_obj.full_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:customer-list-type' 'all' %}">{% trans 'Müştərilər' %}</a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Müştəri" %} {% if customer_obj %} - {{ customer_obj.full_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Müştəri" %} {% if customer_obj %} - {{ customer_obj.full_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <form class="card-body" method="post" action="" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ customer_form.department.label }}</span>
+                                </div>
+                                {{ customer_form.department }}
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Soyad Ad Ata adı</span>
+                                </div>
+                                {{ customer_form.full_name }}
+                            </div>
+                            {% if customer_form.full_name.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.full_name.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Cins</span>
+                                </div>
+                                {{ customer_form.gender }}
+                            </div>
+                            {% if customer_form.gender.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.gender.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Seriya nömrəsi</span>
+                                </div>
+                                {{ customer_form.serial_number }}
+                            </div>
+                            {% if customer_form.serial_number.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.serial_number.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Fin kod</span>
+                                </div>
+                                {{ customer_form.fin }}
+                            </div>
+                            {% if customer_form.fin.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.fin.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Ünvan</span>
+                                </div>
+                                {{ customer_form.address }}
+                            </div>
+                            {% if customer_form.address.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.address.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Əsas əlaqə nömrəsi</span>
+                                </div>
+                                {{ customer_form.contact_number }}
+                            </div>
+                            {% if customer_form.contact_number.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.contact_number.errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="input-group mb-3">
+                                {% if customer_phone_numbers %}
+                                    {% for customer_phone_number in customer_phone_numbers %}
+                                        <div class="input-group input-group-cus ">
+                                            <div class="input-group-prepend btn btn-danger">x</div>
+                                            <div>
+                                                <input id="number-list-item-{{ customer_phone_number.id }}"/>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                        <div>
+                                            <div class="btn btn-success">+</div>
+                                            <div></div>
+                                        </div>
+                                {% endif %}
+                            </div>
+                            <div class=" mb-3 input-group ">
+                                <span style="" class="input-group-addon">{{ customer_form.birthdate.label }}&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-calendar"></i></span>
+                                {{ customer_form.birthdate }}
+
+{#                                <input class="form-control" placeholder="12-12-2018" type="text">#}
+                            </div>
+                            {% if customer_form.birthdate.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.birthdate.errors }}
+                                </div>
+                            {% endif %}
+                            {{ formset.management_form }}
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+{#                                        <div class="input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">#}
+                                        <div class="input-group " id="formset-ids">
+                                            <span class="input-group-addon">
+                                                Nömrələr <i class="fa fa-phone"></i>
+                                            </span>
+
+                                                <a href="#" class="btn btn-success add-form-row">+</a>
+
+                                                {% for formset_item in formset %}
+                                                    <div class="input-group input-group-cus customer-phone-address">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">
+                                                                {% if formset_item.instance.pk %}
+                                                                    {{ formset_item.DELETE }}
+                                                                {% else %}
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                {% endif %}
+{#                                                              <input type="checkbox" aria-label="Checkbox for following text input">#}
+                                                            </div>
+                                                        </div>
+                                                        {{ formset_item.number }}
+                                                          {{ formset_item.id }}
+                                                    {{ form.errors }}
+                                                      <span style="width: 55px;" class="btn btn-danger remove-form-row">x</span>
+                                                    </div>
+
+
+                                                {% endfor %}
+
+
+
+                                        </div>
+{#                                         <input type="button" value="Add More" class="btn btn-success" id="add_more">#}
+
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Select Profile Image</div>
+                                    <div class="panel-body" align="center">
+                                        <input type="file" name="upload_image" id="upload_image" />
+                                        <br />
+                                        <div id="uploaded_image"></div>
+                                    </div>
+                                </div>
+
+                            <div id="uploadimageModal" class="modal" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Upload & Crop Image</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-8 text-center">
+                                                      <div id="image_demo" style="width:350px; margin-top:30px"></div>
+                                                </div>
+                                                <div class="col-md-4" style="padding-top:30px;">
+                                                    <input name="image" id="base64_image"/>
+                                                    <br />
+                                                    <br />
+                                                    <br/>
+                                                    <button type="button" class="btn btn-success crop_image">Crop & Upload Image</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Profil şəkli</span>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <p>{{ customer_form.profile_picture }}</p>
+{#                                <p>{% if customer_obj and customer_obj.profile_picture %}<img src="{{ customer_obj.profile_picture.url }}" height="50"/>{% endif %}</p>#}
+                            </div>
+                            {% if customer_form.profile_picture.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.profile_picture.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Passport uz şəkli seç</span>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <p>{{ customer_form.passport_picture1 }}</p>
+                            </div>
+                            {% if customer_form.passport_picture1.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.passport_picture1.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Passport arxa şəkli seç</span>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <p>
+                                    {{ customer_form.passport_picture2 }}
+                                </p>
+                            </div>
+                            {% if customer_form.passport_picture2.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ customer_form.passport_picture2.errors }}
+                                </div>
+                            {% endif %}
+
+                            <button type="submit" class="btn btn-block btn-success">
+                                {% if customer_obj %} {% trans 'Dəyiş' %} {% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+
+		<script src="{% static 'main/assets/cropper/jquery.min.js' %}"></script>
+		<script src="{% static 'main/assets/cropper/bootstrap.min.js' %}"></script>
+		<script src="{% static 'main/assets/cropper/croppie.js' %}"></script>
+        <script type='text/javascript' src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
+            <script>
+                activeMenu('customers');
+                {#$('#id_birthdate').inputmask("9999-99-99", {placeholder: 'yyyy-aa-gg' });#}
+            </script>
+
+            <script>
+                $("#id_contact_number").inputmask({"mask": "(999) 999-99-99"});
+                $("#formset-ids .form-control").inputmask({"mask": "(999) 999-99-99"});
+                $('#id_birthdate').inputmask("9999-99-99", {placeholder: 'iiii-aa-gg' });
+            </script>
+
+{#             <script>#}
+{#                 $('#add_more').click(function() {#}
+{#                     alert('dsd');#}
+{#                     var form_idx = $('#id_customerphonenumber_set-TOTAL_FORMS').val();#}
+{#                     $('#formset-ids').append("<span><input class='form-control' id='id_customerphonenumber_set-" + form_idx +"-number' maxlength='255' name='customerphonenumber_set-" + form_idx +"-number' type='text'></span>");#}
+                     {#$('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);#}
+{#                 });#}
+{#             </script>#}
+    <script type='text/javascript'>
+        function updateElementIndex(el, prefix, ndx) {
+            var id_regex = new RegExp('(' + prefix + '-\\d+)');
+            var replacement = prefix + '-' + ndx;
+            if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+            if (el.id) el.id = el.id.replace(id_regex, replacement);
+            if (el.name) el.name = el.name.replace(id_regex, replacement);
+        }
+        function cloneMore(selector, prefix) {
+            var newElement = $(selector).clone(true);
+            var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+            newElement.find(':input:not([type=button]):not([type=submit]):not([type=reset])').each(function() {
+                var name = $(this).attr('name').replace('-' + (total-1) + '-', '-' + total + '-');
+                var id = 'id_' + name;
+                $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+            });
+            newElement.find('label').each(function() {
+                var forValue = $(this).attr('for');
+                if (forValue) {
+                  forValue = forValue.replace('-' + (total-1) + '-', '-' + total + '-');
+                  $(this).attr({'for': forValue});
+                }
+            });
+            total++;
+            $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+            $(selector).after(newElement);
+            var conditionRow = $('.customer-phone-address:not(:last)');
+            conditionRow.find('.btn.add-form-row')
+            .removeClass('btn-success').addClass('btn-danger')
+            .removeClass('add-form-row').addClass('remove-form-row')
+            .html('<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>');
+            return false;
+        }
+        function deleteForm(prefix, btn) {
+            var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            if (total > 1){
+                btn.closest('.customer-phone-address').remove();
+                var forms = $('.customer-phone-address');
+                $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+                for (var i=0, formCount=forms.length; i<formCount; i++) {
+                    $(forms.get(i)).find(':input').each(function() {
+                        updateElementIndex(this, prefix, i);
+                    });
+                }
+            }
+            return false;
+        }
+        $(document).on('click', '.add-form-row', function(e){
+            e.preventDefault();
+            cloneMore('.customer-phone-address:last', 'customerphonenumber_set');
+            return false;
+        });
+        $(document).on('click', '.remove-form-row', function(e){
+            e.preventDefault();
+            deleteForm('customerphonenumber_set', $(this));
+            return false;
+        });
+    </script>
+
+<script>
+    {% if success_message %}
+        swal({
+            type: 'success',
+            title: '{% trans 'Success' %}',
+            text: '{{ success_message }}'
+        });
+    {% endif %}
+</script>
+
+
+    <script>
+$(document).ready(function(){
+
+	$image_crop = $('#image_demo').croppie({
+    enableExif: true,
+    viewport: {
+      width:400,
+      height:400,
+      type:'square' //circle
+    },
+    boundary:{
+      width:600,
+      height:600
+    }
+  });
+
+  $('#upload_image').on('change', function(){
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      $image_crop.croppie('bind', {
+        url: event.target.result
+      }).then(function(){
+        console.log('jQuery bind complete');
+      });
+    };
+    reader.readAsDataURL(this.files[0]);
+    $('#uploadimageModal').modal('show');
+  });
+
+  $('.crop_image').click(function(event){
+    $image_crop.croppie('result', {
+      type: 'canvas',
+      size: 'viewport'
+    }).then(function(response){
+        $('#base64_image').val(response);
+          $('#uploadimageModal').modal('hide');
+          $('#uploaded_image').html(data);
+    })
+  });
+
+});
+</script>
+
+
+{% endblock %}

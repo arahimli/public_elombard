@@ -1,0 +1,137 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+    <style>
+    .dt-buttons .dt-button{
+        padding:.5rem 1.6rem!important;
+        border-radius: 5px;
+        border:none;
+        cursor: pointer;
+        background: #8d8d8d;
+        color:#fff!important
+    }
+    .dt-buttons .dt-button:hover{
+        border:none;
+        background: #3a3d44;
+        color:#fff!important
+    }
+
+    </style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Gözləmədə olan paketlər" %} {{ title }} : {% if type == 'active' %}{% trans 'Cari' %}{% else %}Köhnə{% endif%}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Gözləmədə olan paketlər" %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <a  class="col-md-6 btn btn-success" href="{% url 'panel:package-waiting-list-package' package_item.id 'active' %}">Cari Yoxlama</a>
+                                <a class="col-md-6 btn btn-danger" href="{% url 'panel:package-waiting-list-package' package_item.id 'deactive' %}">Yoxlama</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Gözləmədə olan paketlər" %}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow: auto;">
+                            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans 'Paket' %}</th>
+                                        <th>{% trans 'Müştəri' %}</th>
+                                        <th>{% trans 'Məbləğ' %}</th>
+                                        <th>{% trans 'Ödəmə' %}</th>
+                                        <th>{% trans 'Qalıq məbləği' %}</th>
+                                        <th>{% trans 'Department' %}</th>
+                                        <th>{% trans 'Növ' %}</th>
+                                        <th>{% trans 'Aylıq Fazi' %}</th>
+{#                                        <th>{% trans 'Status' %}</th>#}
+                                        <th>{% trans 'Tarixi' %}</th>
+                                        <th>
+                                            {% if type == 'active' %}
+                                                /
+                                            {% else %}
+                                                {% trans 'Son Tarixi' %}
+                                            {% endif %}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% autoescape off %}
+                                    {{ result_html }}
+                                {% endautoescape %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('packages');
+    </script>
+
+
+    <script>
+    $(document).ready(function() {
+    var table = $('#example').DataTable( {
+        lengthChange: true,
+        buttons: [ 'copy', 'excel', 'pdf' ],
+        pageLength: 100,
+        order: [[ 1, "desc" ]],
+        lengthMenu: [[30,50, 100, 150, -1], [30, 50, 100, 150, "All"]]
+    } );
+
+    table.buttons().container()
+        .appendTo( '#example_wrapper .col-md-6:eq(0)' );
+} );
+    </script>
+
+{% endblock %}

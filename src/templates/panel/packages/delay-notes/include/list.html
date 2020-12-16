@@ -1,0 +1,27 @@
+{% load static %}{% load i18n %}
+<tr>
+    <td>
+        <a href="{% url 'panel:customer-edit' package_note_item.package.customer_id %}" style="color: #0a8dd3;">
+            {{ package_note_item.package.customer.full_name }}</a>
+    </td>
+    <td>
+        <a href="{% url 'panel:package-edit' package_note_item.package.id %}" style="color: #0a8dd3;">
+            {{ package_note_item.package.pledge_number }}</a></td>
+
+    <td style="font-weight: bold;">
+        {{ package_note_item.date }}
+    </td>
+    <td>
+    {% with  package_note_item.package.customer.get_phones as get_phones %}
+        {% if get_phones %}
+            {% for get_phone in package_note_item.package.customer.get_phones %}
+                <p>{{ get_phone.number }}</p>
+            {% endfor %}
+        {% else %}
+            N/A
+        {% endif %}
+    {% endwith %}
+
+    </td>
+    <td>{{ package_note_item.package.content }}</td>
+</tr>

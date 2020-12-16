@@ -1,0 +1,61 @@
+{% load static %}{% load i18n %}
+<tr class="">
+    <td class="">
+        <button class="btn btn-danger" type="button" onclick="refreshGeneral();">
+            <i class="fa fa-times"></i>
+        </button>
+        <button class="btn btn-success" type="button" onclick="yeniListItemAdd()">
+            <i class="fa fa-check"></i>
+        </button>
+    </td>
+    <td class="">
+        <input class="form-control {% if dif_days <= 0 %}debt-positive{% else %}debt-minus{% endif %}" type="number" value="{{ dif_days }}" readonly name="pd_delay_day" id="id_pd_delay_day">
+    </td>
+    <td class="date display-years" data-date-format="dd-mm-yyyy" >
+        <input onkeypress="eventPayDate(event)" class="form-control" {% if dif_days > 0 and user.usertype == 2 %} readonly {% endif %} value="{{ now_date }}" type="text" name="pd_paid_date" id="id_pd_paid_date">
+    </td>
+    <td class="">
+        <input  class="form-control" readonly value="{{ should_paid_date|date:'Y-m-d' }}" type="text" name="pd_should_paid_date" id="id_pd_should_paid_date">
+    </td>
+    <td class="">
+        <input onkeypress="eventMonth(event)" class="form-control" {% if day_count > 0 %}readonly{% endif %} value="{% if day_count > 0 %}0{% else %}0{% endif %}" type="number"  name="pd_month_count" id="id_pd_month_count" placeholder="Ay sayı">
+    </td>
+    <td class="">
+        <input  name="pd_day_count" id="id_pd_day_count" class="form-control" readonly="readonly" data-value="{{ dif_days_gen }}" value="{{ dif_days_gen }}">
+{#        <select name="pd_day_count" id="id_pd_day_count" class="form-control" disabled="disabled" data-value="">#}
+{#            {% if day_count > 11   %}#}
+{#                <option value="0">0</option>#}
+{#                <option value="10">10</option>#}
+{#                <option value="{{ day_count }}">20</option>#}
+{#            {% elif day_count == 10 %}#}
+{#                <option value="0">0</option>#}
+{#                <option value="10">10</option>#}
+{#            {% elif day_count > 0 %}#}
+{#                <option value="{{ day_count }}">10</option>#}
+{#            {% else %}#}
+{#                <option value="0">0</option>#}
+{#                <option value="10">10</option>#}
+{#                <option value="20">20</option>#}
+{#            {% endif %}#}
+{##}
+{#        </select>#}
+    </td>
+    <td class="">
+        <input onkeypress="eventPayAmount(event)" class="form-control" {% if dif_days > 0 %} readonly {% endif %} value="0" type="number" step="0.01" name="pd_pay_amount" id="id_pd_pay_amount" placeholder="Əsas">
+    </td>
+    <td class="">
+        <input class="form-control"  type="number" data-value="{{ percent_debt }}" value="{{ percent_debt }}" step="0.01" readonly name="pd_calculated_percent" id="id_pd_calculated_percent" placeholder="Hesablanmış Faiz">
+    </td>
+    <td class="">
+        <input onkeypress="eventAction(event)" class="form-control" type="number" step="0.01" name="pd_paid_percent" value="0" id="id_pd_paid_percent" placeholder="Ödənilmiş Faiz">
+    </td>
+    <td class="">
+        <input class="form-control debt-minus"  type="text" readonly placeholder="Faiz Borcu"  name="pd_percent_debt" value="{{ percent_debt }}" id="id_pd_percent_debt">
+    </td>
+    <td class="">
+        {{ user.first_name }} {{ user.last_name }}
+    </td>
+    <td class="">
+        <input onkeypress="eventAction(event)"  class="form-control"  type="text" placeholder="Qeyd" name="pd_description" id="id_pd_description">
+    </td>
+</tr>

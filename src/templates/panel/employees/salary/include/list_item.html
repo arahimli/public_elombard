@@ -1,0 +1,16 @@
+
+            <tr>
+                <td>{{ counter }}</td>
+                <td>{{ employee_item.first_name }}</td>
+                <td>{{ employee_item.last_name }}</td>
+                <td>{{ employee_item.email }}</td>
+                <td>{{ employee_item.phone }}</td>
+                <td>{{ salary }}</td>
+                <td>
+                    {% if employee_list %}
+                        <a href="javascript:void(0);" class="btn btn-xs btn-icon btn-round btn-inverse-success"><i class="fa fa-check"></i></a>
+                    {% else %}
+                        <a href="javascript:void(0);" class="btn btn-xs btn-icon btn-round btn-inverse-danger"><i class="fa fa-times"></i></a>
+                    {% endif %}
+                </td>
+            </tr>

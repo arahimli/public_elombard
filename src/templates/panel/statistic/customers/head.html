@@ -1,0 +1,25 @@
+{% load static %}
+
+<tr>
+    {% for department_list_item in department_list %}
+        {% if forloop.counter == 1 %}
+            <th style=""></th>
+        {% endif %}
+        <th style="    border-right: none;{% if forloop.counter|divisibleby:2 %}background: white;color: darkorange;{% else %}background: darkorange;color: white;{% endif %}"></th>
+        <th style="    border-right: none;{% if forloop.counter|divisibleby:2 %}background: white;color: darkorange;{% else %}background: darkorange;color: white;{% endif %}">
+            {{ department_list_item.title }}
+        </th>
+        <th style="{% if forloop.counter|divisibleby:2 %}background: white;color: darkorange;{% else %}background: darkorange;color: white;{% endif %}"></th>
+    {% endfor %}
+</tr>
+<tr>
+    {% for department_list_item in department_list %}
+        {% if forloop.counter == 1 %}
+            <th style=""></th>
+        {% endif %}
+        <th style="{% if forloop.counter|divisibleby:2 %}background: white;color: darkorange;{% else %}background: darkorange;color: white;{% endif %}">Cəm müştəri</th>
+        <th style="{% if forloop.counter|divisibleby:2 %}background: white;color: darkorange;{% else %}background: darkorange;color: white;{% endif %}">Yeni müştəri</th>
+        <th  style="{% if forloop.counter|divisibleby:2 %}background: white;color: darkorange;{% else %}background: darkorange;color: white;{% endif %}">Cəlbetmə Faizi</th>
+    {% endfor %}
+
+</tr>

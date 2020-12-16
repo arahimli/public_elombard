@@ -1,0 +1,145 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+{% trans 'Maaş siyahısı' %}
+{% endblock %}
+{% block css_block %}
+{#    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />#}
+{#    <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />#}
+{#    <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />#}
+    <style>
+    .dt-buttons .dt-button{
+        padding:.5rem 1.6rem!important;
+        border-radius: 5px;
+        border:none;
+        cursor: pointer;
+        background: #8d8d8d;
+        color:#fff!important
+    }
+    .dt-buttons .dt-button:hover{
+        border:none;
+        background: #3a3d44;
+        color:#fff!important
+    }
+
+    </style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Maaş siyahısı" %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Maaş siyahısı" %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+        
+        
+            <div class="row">
+
+                <div class="col-xl-12" id="customer-search-all-div">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">{% trans 'Paket filteri' %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="salary-search-form" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-3 mb-2">
+                                        {{ salary_search_form.month }}
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        {{ salary_search_form.year }}
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        {{ salary_search_form.month_day_count }}
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        {{ salary_search_form.department }}
+                                    </div>
+                                    <div class="col-md-12"><hr></div>
+                                </div>
+                            </form>
+                            <hr/>
+                            <a class="btn btn-success " style="width: 100%;text-align:center;"  href="javascript:void(0);" onclick="searchForm();"> {% trans 'Axtar' %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Maaş siyahısı" %}
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="card-body" id="main-data-content">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('personal-control');
+    </script>
+
+
+
+<script>
+    var salary_form = $('#salary-search-form');
+    var main_data_content = $('#main-data-content');
+        function searchForm() {
+            main_data_content.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            {#total_result_table.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');#}
+          $.post('',salary_form.serialize())
+              .done(function (result) {
+                  main_data_content.html(result['main_result']);
+                  {#total_result_table.html(result['total_result']);#}
+                  console.log(result)
+            }).fail(function () {
+                  main_data_content.html('');
+                  {#total_result_table.html('');#}
+          });
+        }
+</script>
+{% endblock %}

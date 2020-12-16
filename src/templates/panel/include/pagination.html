@@ -1,0 +1,29 @@
+{% load static %}{% load i18n %}
+<ul class="pagination">
+    {% if datas %}
+        {% if datas.has_previous %}
+           <li class="page-item"><a class="page-link" href="?page={{ datas.previous_page_number }}">&laquo;</a></li>
+        {% endif %}
+        {% if datas.page_range_data.show_first %}
+            <li class="page-item "><a href="?page=1" class="page-link current">1</a></li>
+            <li class="page-item "><a class="ellipsis">...</a></li>
+        {% endif %}
+        {% for i in datas.page_range_data.page_range %}
+            {% ifequal i datas.number %}
+                <li class="page-item active"><a class="page-link">{{ i }}</a></li>
+            {% else %}
+                <li class="page-item active"><a href="?page={{ i }}" class="page-link current">{{ i }}</a></li>
+            {% endifequal %}
+        {% endfor %}
+        {% if datas.page_range_data.show_last %}
+                <li class="page-item"><a class="ellipsis page-link">...</a></li>
+
+                <li class="page-item"><a href="?page={{ datas.paginator.num_pages }}" class="page-link">{{ datas.paginator.num_pages }}</a></li>
+
+        {% endif %}
+
+        {% if datas.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ datas.next_page_number }}">&raquo;</a></li>
+        {% endif %}
+    {% endif %}
+</ul>

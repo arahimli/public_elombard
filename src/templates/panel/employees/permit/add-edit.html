@@ -1,0 +1,157 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "İcazə" %} {% if data_obj %} - {{ data_obj.title }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:employee-permit-list' %}">{% trans 'İcazələr' %}</a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "İcazə" %} {% if data_obj %} - {{ data_obj.title }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "İcazə" %} {% if data_obj %} - {{ data_obj.full_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <form class="card-body" method="post" action="">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'İşçi' %}</span>
+                                </div>
+                                {{ form.employee }}
+                            </div>
+                            {% if form.employee.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.employee.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'Səbəb' %}</span>
+                                </div>
+                                {{ form.reason }}
+                            </div>
+                            {% if form.reason.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.reason.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'Gün' %}</span>
+                                </div>
+                                {{ form.day }}
+                            </div>
+                            {% if form.day.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.day.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'Saat' %}</span>
+                                </div>
+                                {{ form.time }}
+                            </div>
+                            {% if form.time.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.time.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'Qeyd' %}</span>
+                                </div>
+                                {{ form.description }}
+                            </div>
+                            {% if form.description.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-block btn-success">
+                                {% if data_obj %} - {% trans 'Dəyiş' %} {% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('personal-control');
+        {#activeMenu('personal-control');#}
+    </script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+
+<script>
+$('#id_time').inputmask("hh:mm:ss", {
+        placeholder: "HH:MM:SS",
+        insertMode: false,
+        showMaskOnHover: false,
+        hourFormat: 12
+      }
+   );
+
+    $('.js-basic-single').select2();
+    {#$('.js-basic-single').select2();#}
+</script>
+<script>
+    {% if success_message %}
+        swal({
+            type: 'success',
+            title: '{% trans 'Success' %}',
+            text: '{{ success_message }}'
+        });
+    {% endif %}
+</script>
+
+{% endblock %}

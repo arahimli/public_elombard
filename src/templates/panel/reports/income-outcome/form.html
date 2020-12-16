@@ -1,0 +1,299 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {{ title }} {% if data_obj %} - {{ data_obj.title }}{% else %} {% trans 'yaz' %} {% endif %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:income-outcome-list' o_slug %}">{{ title }}</a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {{ title }} {% if data_obj %} - {{ data_obj.title }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                     {{ title }} {% if data_obj %} - {{ data_obj.title }}{% else %} {% trans 'yaz' %} {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <form class="card-body" method="post" action="">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ form.title.label }}</span>
+                                </div>
+                                {{ form.title }}
+                            </div>
+                            {% if form.title.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Department</span>
+                                </div>
+                                {{ form.department }}
+                            </div>
+                            {% if form.department.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.department.errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Kimdən</span>
+                                </div>
+                                {{ form.user }}
+                            </div>
+                            {% if form.user.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.user.errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">Kimə</span>
+                                </div>
+                                {{ form.user_to }}
+                            </div>
+                            {% if form.user_to.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.user_to.errors }}
+                                </div>
+                            {% endif %}
+                            {% if o_slug == 'income' %}
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">{{ form.type.label }}</span>
+                                    </div>
+                                    {{ form.type }}
+                                </div>
+                                {% if form.type.errors %}
+                                    <div class="alert alert-danger mb-3" role="alert">
+                                        {{ form.type.errors }}
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <input type="hidden" id="id_type" name="type" value="main">
+                            {% endif %}
+
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ form.amount.label }}</span>
+                                </div>
+                                {{ form.amount }}
+                            </div>
+                            {% if form.amount.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.amount.errors }}
+                                </div>
+                            {% endif %}
+
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ form.currency.label }}</span>
+                                </div>
+                                {{ form.currency }}
+                            </div>
+                            {% if form.currency.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.currency.errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="input-group  mb-3 date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">
+                                <span class="input-group-addon">{{ form.date.label }} <i class="fa fa-calendar"></i></span>
+                                {{ form.date }}
+                            </div>
+                            {% if form.date.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.date.errors }}
+                                </div>
+                            {% endif %}
+                            {% if o_slug == 'outcome' %}
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Xərcin növü</span>
+                                    </div>
+                                    {{ form.outcome_type }}
+                                </div>
+                                {% if form.outcome_type.errors %}
+                                    <div class="alert alert-danger mb-3" role="alert">
+                                        {{ form.outcome_type.errors }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="input-group mb-3" id="outcome_name_id" style="{% if form.outcome_name.errors %}display: block;{% else %}display: none;{% endif %}">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Xərcin adı</span>
+                                    </div>
+                                    {{ form.outcome_name }}
+                                </div>
+                                {% if form.outcome_name.errors %}
+                                    <div class="alert alert-danger mb-3" role="alert">
+                                        {{ form.outcome_name.errors }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="input-group mb-3" id="outcome_type2_id" style="{% if form.outcome_type2.errors %}display: block;{% else %}display: none;{% endif %}">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">Xərcin tipi</span>
+                                    </div>
+                                    {{ form.outcome_type2 }}
+                                </div>
+                                {% if form.outcome_type2.errors %}
+                                    <div class="alert alert-danger mb-3" role="alert">
+                                        {{ form.outcome_type2.errors }}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ form.notes.label }}</span>
+                                </div>
+                                {{ form.notes }}
+                            </div>
+                            {% if form.notes.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.notes.errors }}
+                                </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-block btn-success">
+                                {% if data_obj %} {% trans 'Dəyiş' %} {% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('reports');
+    </script>
+
+    <script>
+        {% if base_profile.usertype == 2 %}
+            $( document ).ready(function() {
+                document.getElementById("id_department").disabled = true;
+            });
+        {% endif %}
+    </script>
+
+
+
+
+<script>
+
+    {% if o_slug == 'outcome' %}
+        var id_outcome_type = $('#id_outcome_type');
+        var id_outcome_name = $('#id_outcome_name');
+        var id_outcome_type2 = $('#id_outcome_type2');
+        // A $( document ).ready() block.
+        $( document ).ready(function() {
+            {% if data_obj %}
+                   var outcome_name_val = {% if data_obj.outcome_name %}{{ data_obj.outcome_name_id }}{% else %}0{% endif %};
+                   var outcome_type2_val = {% if data_obj.outcome_type2 %}{{ data_obj.outcome_type2_id }}{% else %}0{% endif %};
+                   checkData('type',{{ data_obj.outcome_type_id }},'outcome_name');
+
+                   checkData('type_name',{{ data_obj.outcome_name_id }},'outcome_type2');
+                   setTimeout(function(){
+                       id_outcome_name.val(outcome_name_val);
+                       id_outcome_type2.val(outcome_type2_val);
+                   }, 1500);
+            {% else %}
+                {% if form.outcome_name.errors %}
+
+                {% else %}
+                    id_outcome_name.html('<option value="">---------</option>');
+                {% endif %}
+                {% if form.outcome_type2.errors %}{% else %}
+                    id_outcome_type2.html('<option value="">---------</option>');
+                {% endif %}
+
+
+            {% endif %}
+
+        });
+
+        id_outcome_type.change(function () {
+           checkData('type',$( this ).val(),'outcome_name');
+        });
+        id_outcome_name.change(function () {
+           checkData('type_name',$( this ).val(),'outcome_type2');
+        });
+        function checkData($type,$id,$next){
+            if($id=='' || $id ==null){
+                $id=0;
+            }
+            $.post(
+                '{% url 'panel:logo-outcome-ajax-data-list' %}',{'id':$id,'type':$type,'csrfmiddlewaretoken':'{{ csrf_token }}'}
+            ).done(function (result) {
+                $('#id_'+$next).html(result['result']);
+                if($type == 'type'){
+                    $('#outcome_type2_id').hide();
+                }
+                $('#'+$next+'_id').show();
+
+            });
+        }
+    {% endif %}
+</script>
+<script>
+    {% if success_message %}
+        swal({
+            type: 'success',
+            title: '{% trans 'Success' %}',
+            text: '{{ success_message }}'
+        });
+    {% endif %}
+</script>
+
+{% endblock %}

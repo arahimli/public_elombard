@@ -1,0 +1,329 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+<style>
+  .customer-search-all-div tbody {
+      display:block;
+      max-height:350px;
+      overflow-y:auto;
+  }
+  .customer-search-all-div thead, .customer-search-all-div tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;
+  }
+  .customer-search-all-div thead {
+      width: calc( 100% - 1em )
+  }
+
+#main-data-content-div { overflow: auto; height: 500px; }
+#main-data-content-div thead th { position: sticky; top: 0; }
+
+/* Just common table stuff. Really. */
+#main-data-content-div table  { border-collapse: collapse; width: 100%; }
+{# #main-data-content th, td { padding: 8px 16px; } #}
+#main-data-content-div th     { background:#eee; }
+
+</style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-xl-12" id="customer-search-all-div">
+                    <div class="main-data-content main-data-content-statistics">
+                        <div class="main-data-content-body">
+                            <form id="package-search-form" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-4 mb-2">
+                                        {{ package_search_form.customer_name }}
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        {{ package_search_form.s_serial_number }}
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        {{ package_search_form.s_fin }}
+                                    </div>
+
+                                    <div class="mb-3  col-md-3 ">
+{#                                         <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-01-01">#}
+{#                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>#}
+{#                                            {{ package_search_form.start_date }}#}
+{#                                        </div>#}
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            {{ package_search_form.start_date }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3  col-md-3 ">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            {{ package_search_form.end_date }}
+                                        </div>
+{#                                         <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month|floatformat:-2 }}-{{ now.day|floatformat:-2 }}">#}
+{#                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>#}
+{#                                            {{ package_search_form.end_date }}#}
+{#                                        </div>#}
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            {{ package_search_form.amount_min }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                        {{ package_search_form.amount_max }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-percent"></i></span>
+                                            {{ package_search_form.percent }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                            {{ package_search_form.packet_type }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon">An</span>
+                                            {{ package_search_form.annuitet }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-sort-numeric-asc"></i></span>
+                                        {{ package_search_form.package_id }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                        {{ package_search_form.currency }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-question"></i></span>
+                                        {{ package_search_form.status }}
+                                        </div>
+                                    </div>
+                                    {% if base_profile.usertype != 2 %}
+                                        <div class="col-md-3 mb-2">
+                                            <div class=" input-group">
+                                                <span style="" class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                                {{ package_search_form.department }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <input type="hidden" name="page-num" id="page-num" value="1"/>
+                                <input type="hidden" name="delay" id="page-num" value="-"/>
+                            </form>
+                            <a class="btn btn-success " style="width: 100%;text-align:center;"  href="javascript:void(0);" onclick="searchForm();"> {% trans 'Axtar' %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics main-data-content main-data-content-statistics">
+                        <div class="card-header main-data-content-header">
+                            <div class="card-heading main-data-content-heading">
+                                <h4 class="card-title main-data-content-title">Cəmi Nəticə</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive" id="total-result-table">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics main-data-content main-data-content-statistics">
+                        <div class="card-header main-data-content-header">
+                            <div class="card-heading main-data-content-heading">
+                                <h4 class="card-title">
+                                    {{ page_title }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-body" style="padding: 0 0 0 0;" id="main-data-content-div" >
+                            <div style="width: 100%;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('packages');
+    </script>
+
+
+    <script type="text/javascript">
+        
+        $( "#package-search-form :input" ).keyup(function(event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                searchForm();
+            }
+        });
+    </script>
+
+
+    <script>
+        var is_active = true;
+        var has_data = true;
+            $('#main-data-content-div').on('scroll', function() {
+                console.log("-------------------------------------------------------------------------------");
+                console.log("$(this).scrollTop()" + $(this).scrollTop());
+                console.log("$(this).height()" + $(this).height());
+                console.log("-------------------------------------------------------------------------------");
+                console.log("-------------------------------------------------------------------------------");
+                console.log("-------------------------------------------------------------------------------");
+                if ($(this).scrollTop() +
+                    $(this).height()>=
+                    ($(this).height() + 250) && is_active && has_data) {
+                    infinityForm();
+                    // alert('End of DIV is reached!');
+                }
+            });
+
+
+        function infinityForm() {
+            is_active = false;
+              $.post('',package_search_form.serialize())
+                  .done(function (result) {
+                      $('#main-data-content-div tbody').append(result['main_result']);
+                      if(result['main_result'] != ''){
+                          $('#page-num').val(parseInt($('#page-num').val()) + 1);
+                      }else{
+                          has_data = false;
+                      }
+                      is_active = true;
+
+                      console.log(result)
+                }).fail(function () {
+                    is_active = true;
+              });
+         }
+    </script>
+
+    <script>
+        var search_form = $('#customer-search-form');
+        var main_data_content = $('#main-data-content-div');
+        var total_result_table = $('#total-result-table');
+        var customer_search_list = $('#customer-search-list');
+        $( "#customer-search-form :input" ).keyup(function() {
+          $.post('{% url 'panel:customer-ajax-list' %}',search_form.serialize())
+              .done(function (result) {
+                customer_search_list.html(result['result']);
+            })
+        });
+    </script>
+    <script>
+        var package_search_form = $('#package-search-form');
+
+
+        $( document ).ready(function() {
+            setTimeout(function(){
+                searchForm();
+            }, 500);
+            console.log( "ready!" );
+        });
+
+        function searchForm() {
+            $('#page-num').val(1);
+            main_data_content.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            total_result_table.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+          $.post('',package_search_form.serialize())
+              .done(function (result) {
+                  main_data_content.html(result['main_result']);
+                  total_result_table.html(result['total_result']);
+                  console.log(result);
+                  $('#page-num').val(2);
+
+            }).fail(function () {
+                  main_data_content.html('');
+                  total_result_table.html('');
+          });
+        }
+
+
+    var win = $('#main-data-content ');
+
+	// Each time the user scrolls
+	win.scroll(function() {
+		// End of the document reached?
+		if ($(document).height() - win.height() == win.scrollTop()) {
+			$('#loading').show();
+
+			$.ajax({
+				url: 'get-post.php',
+				dataType: 'html',
+				success: function(html) {
+					$('#posts').append(html);
+					$('#loading').hide();
+				}
+			});
+		}
+	});
+    </script>
+    <script>
+        function selectCustomer($id, $name) {
+            $( ".customer-button-item" ).each(function( index ) {
+               $( this ).removeClass('btn-info').removeClass('btn-success').addClass('btn-info').text('{% trans 'Select' %}');
+            });
+            var customer_button_item = $('#customer-button-item-'+$id);
+            if(customer_button_item.hasClass('btn-info')){
+                customer_button_item.addClass('btn-success').removeClass('btn-info');
+                customer_button_item.html('{% trans 'Selected' %}');
+                $('#id_customer_name').val($name);
+                $('#id_customer_id').val($id);
+            }else if(customer_button_item.hasClass('btn-success')){
+                customer_button_item.addClass('btn-info').removeClass('btn-success');
+                customer_button_item.text('{% trans 'Select' %}');
+                $('#id_customer_name').val('');
+                $('#id_customer_id').val('');
+            }
+        }
+    </script>
+    <script>
+        function delayNoteWrite($url,$id) {
+            var value = $('#daily-note-'+$id);
+              $.post($url,{'csrfmiddlewaretoken':'{{ csrf_token }}','value':value.val()})
+                  .done(function (result) {
+
+                })
+        }
+    </script>
+{% endblock %}

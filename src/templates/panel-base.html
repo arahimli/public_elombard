@@ -1,0 +1,276 @@
+{% load static from staticfiles %}
+{% load  i18n %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <title>{{ base_site_name }} - 
+    {% block title_block %}
+    
+    {% endblock %}
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    {% block meta_block %}
+    
+    {% endblock %}
+    <!-- app favicon -->
+    <link rel="shortcut icon" href="{% static 'main/assets/img/favicon.ico' %}">
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <!-- plugin stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{% static 'main/assets/css/vendors.css' %}" />
+    <!-- app style -->
+    <link rel="stylesheet" type="text/css" href="{% static 'main/assets/css/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" />
+    {% block css_block %}
+    
+    {% endblock %}
+    <style>
+        th, td, td a{
+            color: #343a40;
+        }
+    </style>
+</head>
+
+<body class="sidebar-mini">
+    <!-- begin app -->
+    <div class="app">
+        <!-- begin app-wrap -->
+        <div class="app-wrap">
+            <!-- begin pre-loader -->
+            <div class="loader">
+                <div class="h-100 d-flex justify-content-center">
+                    <div class="align-self-center">
+                        <img src="{% static 'main/assets/img/loader/loader.svg' %}" alt="loader">
+                    </div>
+                </div>
+            </div>
+            <!-- end pre-loader -->
+            <!-- begin app-header -->
+            <header class="app-header top-bar">
+                <!-- begin navbar -->
+                <nav class="navbar navbar-expand-md">
+
+                    <!-- begin navbar-header -->
+                    <div class="navbar-header d-flex align-items-center">
+                        <a href="javascript:void(0)" class="mobile-toggle"><i class="ti ti-align-right"></i></a>
+                        <a class="navbar-brand" href="{% url 'panel:dashboard' %}">
+                            <img src="{% static 'main/assets/img/logo.png' %}" class="img-fluid logo-desktop" alt="logo" />
+                            <img src="{% static 'main/assets/img/logo-icon.png' %}" class="img-fluid logo-mobile" alt="logo" />
+                        </a>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="ti ti-align-left"></i>
+                    </button>
+                    <!-- end navbar-header -->
+                    <!-- begin navigation -->
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="navigation d-flex">
+                            <ul class="navbar-nav nav-left">
+                                <li class="nav-item">
+                                    <a href="javascript:void(0)" class="nav-link sidebar-toggle">
+                                        <i class="ti ti-align-right"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item full-screen d-none d-lg-block" id="btnFullscreen">
+                                    <a href="javascript:void(0)" class="nav-link expand">
+                                        <i class="icon-size-fullscreen"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav nav-right ml-auto">
+                                <li class="nav-item dropdown user-profile">
+                                    <a href="javascript:void(0)" class="nav-link dropdown-toggle " id="navbarDropdown4" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <img src="{% static 'main/assets/img/no-avatar-50.jpg' %}" alt="avtar-img">
+                                        <span class="bg-success user-status"></span>
+                                    </a>
+                                    <div class="dropdown-menu animated fadeIn" aria-labelledby="navbarDropdown">
+                                        <div class="bg-gradient px-4 py-3">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="mr-1">
+                                                    <h4 class="text-white mb-0">{{ base_profile.first_name }} {{ base_profile.last_name }}</h4>
+                                                    <small class="text-white">{{ base_profile.email }}</small>
+                                                </div>
+                                                <a href="{% url 'base-user:logout' %}" class="text-white font-20 tooltip-wrapper" data-toggle="tooltip" data-placement="top" title="" data-original-title="{% trans 'Çıxış' %}">
+                                                    <i class="zmdi zmdi-power"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="p-4">
+                                            <a class="dropdown-item d-flex nav-link" href="{% url 'panel:dashboard' %}">
+                                                <i class="fa fa-user pr-2 text-success"></i> {% trans 'Panel' %}</a>
+{#                                            <a class="dropdown-item d-flex nav-link" href="javascript:void(0)">#}
+{#                                                <i class="fa fa-envelope pr-2 text-primary"></i> Inbox#}
+{#                                            </a>#}
+                                            <a class="dropdown-item d-flex nav-link" href="{% url 'base-user:logout' %}">
+                                                <i class=" ti ti-settings pr-2 text-info"></i>Çıxış
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end navigation -->
+                </nav>
+                <!-- end navbar -->
+            </header>
+            <!-- end app-header -->
+            <!-- begin app-container -->
+            <div class="app-container">
+                <!-- begin app-nabar -->
+                <aside class="app-navbar ">
+                    <!-- begin sidebar-nav -->
+                    <div class="sidebar-nav scrollbar scroll_light">
+                        <ul class="metismenu " id="sidebarNav">
+                            <li class="nav-static-title ">{% trans 'Menu' %}</li>
+                            <li class="active">
+                                <a href="{% url 'panel:dashboard' %}" aria-expanded="false"><i class="nav-icon ti ti-rocket"></i><span class="nav-title">{% trans 'Panel' %}</span></a>
+                            </li>
+                            {% if base_profile.usertype != 2 %}
+                                <li class="menu-list-title-statistic "><a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                                    <i class="nav-icon ti ti-calendar"></i><span class="nav-title">{% trans 'Statistika' %}</span></a>
+                                    <ul aria-expanded="false">
+                                        <li> <a href='{% url 'panel:statistic-type' 'general' %}'>{% trans 'Ümumi statistika' %}</a> </li>
+                                        <li> <a href='{% url 'panel:statistic-type' 'monthly' %}'>{% trans 'Aylıq statistika' %}</a> </li>
+                                        <li> <a href='{% url 'panel:statistic-type' 'customers' %}'>{% trans 'Müştəri statistikası' %}</a> </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            <li class="menu-list-title-customers "><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">{% trans 'Müştərilər' %}</span></a>
+                                <ul aria-expanded="false">
+                                    <li> <a href='{% url 'panel:customer-list-type' 'all' %}'>{% trans 'Müştəri siyahısı' %}</a> </li>
+                                    <li> <a href='{% url 'panel:customer-list-type' 'birthday' %}'>{% trans 'Doğum günü olanlar' %}</a> </li>
+                                    <li> <a href='{% url 'panel:customer-create' %}'>{% trans 'Müştəri əlavə et' %}</a> </li>
+                                </ul>
+                            </li>
+                            <li class="menu-list-title-packages"><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">{% trans 'Paketlər' %}</span></a>
+                                <ul aria-expanded="false">
+                                    <li> <a href='{% url 'panel:package-list' %}'>{% trans 'Paket siyahısı' %}</a> </li>
+                                    <li> <a href='{% url 'panel:package-create' %}'>{% trans 'Paket əlavə et' %}</a> </li>
+                                    <li> <a href='{% url 'panel:package-waiting-list' 'active' %}'>{% trans 'Yoxlamada olanlar' %}</a> </li>
+                                    <li> <a href="{% url 'panel:package-ordered-list' %}">{% trans 'Zakaza verilənlər' %}</a> </li>
+                                    <li> <a href="{% url 'panel:package-list-type' 'delay' %}">{% trans 'Gecikənlər' %}</a> </li>
+                                </ul>
+                            </li>
+                            <li class="menu-list-title-reports"><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">{% trans 'Reportlar' %}</span></a>
+                                <ul aria-expanded="false">
+                                    <li> <a href='{% url 'panel:income-outcome-case' %}'>{% trans 'Kassa' %}</a> </li>
+                                    <li> <a href='{% url 'panel:income-outcome-list' 'income' %}'>{% trans 'Gəlirlər' %}</a> </li>
+                                    <li> <a href='{% url 'panel:income-outcome-list' 'outcome' %}'>{% trans 'Çıxarlar' %}</a> </li>
+                                    {% if base_profile.usertype != 2 %}
+                                        <li> <a href='{% url 'panel:log-list' %}'>{% trans 'Loqlar' %}</a> </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            {% if base_profile.usertype != 2 %}
+                            <li  class="menu-list-title-personal-control">
+                                <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
+                                <i class="nav-icon ti ti-calendar"></i><span class="nav-title">{% trans 'Personal tənzimi' %}</span></a>
+                                <ul aria-expanded="false">
+                                    <li> <a href='{% url 'panel:employee-list' %}'>{% trans 'İşçilər' %}</a> </li>
+                                    <li> <a href='{% url 'panel:employee-create' %}'>{% trans 'İşçi əlavə et' %}</a> </li>
+                                    <li> <a href=''>{% trans 'İmkanlar' %}</a> </li>
+                                    <li> <a href="{% url 'panel:employee-permit-list' %}">{% trans 'Icazə siyahısı' %}</a> </li>
+{#                                    <li> <a href="{% url 'panel:employee-permit-create' %}">{% trans 'Əlavə et' %}</a> </li>#}
+
+                                </ul>
+                            </li>
+                            {% endif %}
+                            {% if base_profile.usertype != 2 %}
+                                <li class="menu-list-title-advanced-datas">
+                                    <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-list"></i><span class="nav-title">{% trans 'Data tənzimi' %}</span></a>
+                                    <ul aria-expanded="false">
+    {#                                    <li> <a href="javascript: void(0);">Level 1.1</a> </li>#}
+                                        <li class="scoop-hasmenu menu-list-title-advanced-datas-1">
+                                            <a class="has-arrow" href="javascript: void(0);">{% trans 'Valyuta' %}</a>
+                                            <ul aria-expanded="false">
+                                                <li> <a href="{% url 'panel:currency-list' %}">{% trans 'Siyahı' %}</a> </li>
+                                                <li> <a href="{% url 'panel:currency-create' %}">{% trans 'Əlavə et' %}</a> </li>
+                                            </ul>
+                                        </li>
+                                        <li class="scoop-hasmenu menu-list-title-advanced-datas-2">
+                                            <a class="has-arrow" href="javascript: void(0);">{% trans 'Departmentlər' %}</a>
+                                            <ul aria-expanded="false">
+                                                <li> <a href="{% url 'panel:department-list' %}">{% trans 'Siyahı' %}</a> </li>
+                                                <li> <a href="{% url 'panel:department-create' %}">{% trans 'Əlavə et' %}</a> </li>
+
+                                            </ul>
+                                        </li>
+                                        <li class="scoop-hasmenu menu-list-title-advanced-datas-3">
+                                            <a class="has-arrow" href="javascript: void(0);">{% trans 'Paket tipləri' %}</a>
+                                            <ul aria-expanded="false">
+                                                <li> <a href="{% url 'panel:package_type-list' %}">{% trans 'Siyahı' %}</a> </li>
+                                                <li> <a href="{% url 'panel:package_type-create' %}">{% trans 'Əlavə et' %}</a> </li>
+                                            </ul>
+                                        </li>
+                                        <li class="scoop-hasmenu menu-list-title-advanced-datas-4">
+                                            <a class="has-arrow" href="javascript: void(0);">{% trans 'Girov' %}</a>
+                                            <ul aria-expanded="false">
+                                                <li> <a href="{% url 'panel:product-list' %}">{% trans 'Siyahı' %}</a> </li>
+                                                <li> <a href="{% url 'panel:product-create' %}">{% trans 'Əlavə et' %}</a> </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            <li><a href="{% url 'base-user:logout' %}" aria-expanded="false"><i class="nav-icon ti ti-email"></i><span class="nav-title">{% trans 'Çıxış' %}</span></a> </li>
+                        </ul>
+                    </div>
+                    <!-- end sidebar-nav -->
+                </aside>
+                <!-- end app-navbar -->
+                {% block content_block %}
+
+                {% endblock %}
+            </div>
+            <!-- end app-container -->
+            <!-- begin footer -->
+            <footer class="footer">
+                <div class="row">
+                    <div class="col-12 col-sm-6 text-center text-sm-left">
+                        <p>&copy; {% trans 'Copyright' %} {{ now.year }}. {% trans 'All rights reserved' %}.</p>
+                    </div>
+                </div>
+            </footer>
+            <!-- end footer -->
+        </div>
+        <!-- end app-wrap -->
+    </div>
+    <!-- end app -->
+
+    <!-- plugins -->
+    <script src="{% static 'main/assets/js/vendor2.js' %}"></script>
+
+    <!-- custom app -->
+    <script src="{% static 'main/assets/js/app.js' %}?v=123"></script>
+{#    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js "></script>#}
+{#    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script>#}
+
+    <script>
+        function activeMenu($class){
+            $('.menu-list-title-'+$class).addClass('active')
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
+    {% block js_block %}
+    
+    {% endblock %}
+    {% if base_profile.usertype == 2 %}
+        <script>
+            onselectstart = (e) => {
+              e.preventDefault();
+              console.log("nope!");
+           }
+        </script>
+    {% endif %}
+</body>
+
+</html>

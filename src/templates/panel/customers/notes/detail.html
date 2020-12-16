@@ -1,0 +1,102 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+{% trans 'Qeyd' %}
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>Bildiriş mətni</h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:notification-list' %}">Qeydlər</a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Qeyd" %} {{ data_obj.id }}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+
+            <!--mail-Compose-contant-start-->
+            <div class="row account-contant">
+                <div class="col-12">
+                    <div class="card card-statistics">
+                        <div class="card-body p-0">
+                            <div class="row no-gutters">
+                                <div class="col-xl-4 col-md-4 pb-xl-0 pb-5 border-right">
+                                    <div class="page-account-profil">
+                                        <div class="profile-img text-center rounded-circle">
+                                            <div class="pt-5 pb-5">
+                                                <div class="bg-img m-auto">
+                                                    <img src="{% static 'main/assets/img/no-avatar-50.jpg' %}" class="img-fluid" alt="users-avatar">
+                                                </div>
+                                                <div class="profile pt-4">
+                                                    <h4 class="mb-1">{{ data_obj.title }}</h4>
+                                                    <p>{{ data_obj.date }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-8 col-md-8 col-12 border-t border-right">
+                                    <div class="page-account-form">
+                                        <div class="form-titel border-bottom p-3">
+                                            <h5 class="mb-0 py-2">Qeyd mətni</h5>
+                                        </div>
+                                        <div class="p-4">
+                                            {% autoescape off %}
+                                                {{ data_obj.content }}
+                                            {% endautoescape %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--mail-Compose-contant-end-->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('customers');
+    </script>
+
+
+
+{% endblock %}
+
+
+

@@ -1,0 +1,56 @@
+{% load i18n %}{% load static %}
+
+<tr>
+    <td>
+        <a href="{% url 'panel:customer-edit' customer_item.id %}">
+            {{ for_i }}
+        </a>
+    </td>
+    <td>
+        <a href="{% url 'panel:customer-edit' customer_item.id %}">
+            {{ customer_item.full_name }}
+            {% if customer_item.get_packages_info.3 %}
+                &nbsp;
+                <a class="btn btn-warning">
+                    sa
+                </a>
+            {% endif %}
+        </a>
+    </td>
+    <td>{{ customer_item.fin }}</td>
+    {% if show_photo == 'show' %}
+        <td>
+            {% if customer_item.profile_picture %}
+                <img src="{{ customer_item.profile_picture.url }}" style="height: 50px;">
+            {% else %}
+                <img src="{% static 'main/assets/img/no-avatar-50.jpg' %}" style="height: 50px;">
+            {% endif %}
+        </td>
+    {% endif %}
+    <td>{{ customer_item.serial_number }}</td>
+{#    <td>{{ customer_item.id_number }}</td>#}
+    <td>
+        {% if customer_item.get_package_status.0 != '-' %}
+            {{ customer_item.get_package_status.0 }} - {{ customer_item.get_package_status.1 }}
+        {% else %}
+            {{ customer_item.get_package_status.1 }}
+        {% endif %}
+    </td>
+    <td>{{ customer_item.contact_number }}</td>
+    <td>{{ customer_item.birthdate|date:'d.m.Y' }}</td>
+    <td>
+        <button class="btn btn-success">{{ customer_item.get_packages_info.0 }}</button>
+    </td>
+    <td>
+        <button class="btn btn-info">{{ customer_item.get_packages_info.2 }}</button>
+    </td>
+{#                                            <td>{{ customer_item.id_number }}</td>#}
+    <td>
+        <a href="{% url 'panel:customer-notes-list' customer_item.id %}" class="btn btn-square btn-info">
+            <i class="fa fa-sticky-note-o"></i> Qeydlər
+        </a>
+        <a href="{% url 'panel:customer-edit' customer_item.id %}" class="btn btn-icon btn-square btn-warning">
+            <i class="fa fa-edit"></i>
+        </a>
+    </td>
+</tr>

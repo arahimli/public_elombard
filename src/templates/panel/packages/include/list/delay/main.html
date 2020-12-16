@@ -1,0 +1,43 @@
+{% load static %}{% load i18n %}
+
+    <style>
+    .dt-buttons .dt-button{
+        padding:.5rem 1.6rem!important;
+        border-radius: 5px;
+        border:none;
+        cursor: pointer;
+        background: #8d8d8d;
+        color:#fff!important
+    }
+    .dt-buttons .dt-button:hover{
+        border:none;
+        background: #3a3d44;
+        color:#fff!important
+    }
+
+    </style>
+
+
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>{% trans 'Ad Soyad' %}</th>
+            <th>{% trans 'Kod' %}</th>
+            <th>{% trans 'Qalıq Borc' %}</th>
+            <th>{% trans 'Aylıq faiz' %}</th>
+            <th>{% trans 'Ödənməli tarix' %}</th>
+            <th>{% trans 'Gecikmə' %}</th>
+            <th>{% trans 'Nömrələr' %}</th>
+            <th>{% trans 'Günlük qeyd' %}</th>
+            <th>{% trans 'Son qeyd' %}</th>
+            <th>{% trans 'Qeyd' %}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% autoescape off %}
+        {{ list_html }}
+    {% endautoescape %}
+
+
+    </tbody>
+</table>

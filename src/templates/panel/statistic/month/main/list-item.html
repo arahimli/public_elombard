@@ -1,0 +1,31 @@
+{% load static %}{% load i18n %}
+{% if same_day is False %} <hr/> {% endif %}
+<style>
+.table td, .table th {
+    border-top: 1px solid #6a6b6c;
+}
+</style>
+<div class="table-responsive">
+  <!--Table-->
+  <table class="table table-striped" style="">
+
+    <!--Table head-->
+    <thead>
+    {% autoescape off %}
+        {{ totally_head_text }}
+    {% endautoescape %}
+
+    </thead>
+    <!--Table head-->
+
+    <!--Table body-->
+    <tbody>
+    {% autoescape off %}
+        {{ result_both_part }}
+    {% endautoescape %}
+
+    </tbody>
+    <!--Table body-->
+  </table>
+  <!--Table-->
+</div>

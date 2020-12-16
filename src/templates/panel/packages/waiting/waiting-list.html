@@ -1,0 +1,262 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+    <style>
+    .dt-buttons .dt-button{
+        padding:.5rem 1.6rem!important;
+        border-radius: 5px;
+        border:none;
+        cursor: pointer;
+        background: #8d8d8d;
+        color:#fff!important
+    }
+    .dt-buttons .dt-button:hover{
+        border:none;
+        background: #3a3d44;
+        color:#fff!important
+    }
+
+    </style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Yoxlamada olan paketlər" %} - {% if type == 'active' %}{% trans 'Cari' %}{% else %}Köhnə{% endif%}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Yoxlamada olan paketlər" %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+
+
+            <div class="row">
+
+                <div class="col-xl-12" id="customer-search-all-div">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">{% trans 'Paket filteri' %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="package-search-form" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <h4 class="text-center">
+                                            Müştəri
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        {{ package_search_form.customer_name }}
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        {{ package_search_form.s_serial_number }}
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        {{ package_search_form.s_fin }}
+                                    </div>
+                                    <div class="col-md-12"><hr></div>
+
+                                    <div class="mb-3  col-md-3 ">
+{#                                         <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-01-01">#}
+{#                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>#}
+{#                                            {{ package_search_form.start_date }}#}
+{#                                        </div>#}
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            {{ package_search_form.start_date }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3  col-md-3 ">
+{#                                         <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month|floatformat:-2 }}-{{ now.day|floatformat:-2 }}">#}
+{#                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>#}
+{#                                            {{ package_search_form.end_date }}#}
+{#                                        </div>#}
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            {{ package_search_form.end_date }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            {{ package_search_form.amount_min }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                        {{ package_search_form.amount_max }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-percent"></i></span>
+                                            {{ package_search_form.percent }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                            {{ package_search_form.packet_type }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon">An</span>
+                                            {{ package_search_form.annuitet }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-sort-numeric-asc"></i></span>
+                                        {{ package_search_form.package_id }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                        {{ package_search_form.currency }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-question"></i></span>
+                                        {{ package_search_form.status }}
+                                        </div>
+                                    </div>
+                                    {% if base_profile.usertype != 2 %}
+                                        <div class="col-md-3 mb-2">
+                                            <div class=" input-group">
+                                                <span style="" class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                                {{ package_search_form.department }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </form>
+                            <hr/>
+                            <a class="btn btn-success " style="width: 100%;text-align:center;"  href="javascript:void(0);" onclick="searchForm();"> {% trans 'Axtar' %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <a  class="col-md-6 btn btn-success" href="{% url 'panel:package-waiting-list' 'active' %}">Cari Yoxlama</a>
+                                <a class="col-md-6 btn btn-danger" href="{% url 'panel:package-waiting-list' 'deactive' %}">Yoxlama</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Yoxlamada olan paketlər" %}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow: auto;">
+                            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans 'Paket' %}</th>
+                                        <th>{% trans 'Müştəri' %}</th>
+                                        <th>{% trans 'Məbləğ' %}</th>
+                                        <th>{% trans 'Ödəmə' %}</th>
+                                        <th>{% trans 'Qalıq məbləği' %}</th>
+                                        <th>{% trans 'Faiz' %}</th>
+                                        <th>{% trans 'Aylıq Fazi' %}</th>
+                                        <th>{% trans 'Cəmi məbləğ' %}</th>
+                                        <th>{% trans 'Ödəmə tarix' %}</th>
+                                        <th>{% trans 'Gecikmə' %}</th>
+                                        <th>{% trans 'Department' %}</th>
+                                        <th>{% trans 'Növ' %}</th>
+                                        {% if type == 'deactive' %}
+                                            <th>{% trans 'Status' %}</th>
+                                        {% endif %}
+                                        <th>{% trans 'Atılma tarixi' %}</th>
+                                        <th>{% trans 'İlk tarix' %}</th>
+                                        <th>
+                                            {% if type == 'active' %}
+                                                /
+                                            {% else %}
+                                                {% trans 'Son Tarixi' %}
+                                            {% endif %}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% autoescape off %}
+                                    {{ result_html }}
+                                {% endautoescape %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('packages');
+    </script>
+
+
+    <script>
+    $(document).ready(function() {
+    var table = $('#example').DataTable( {
+        lengthChange: true,
+        buttons: [ 'copy', 'excel', 'pdf' ],
+        pageLength: 100,
+        order: [[ 1, "desc" ]],
+        lengthMenu: [[30,50, 100, 150, -1], [30, 50, 100, 150, "All"]]
+    } );
+
+    table.buttons().container()
+        .appendTo( '#example_wrapper .col-md-6:eq(0)' );
+} );
+    </script>
+
+{% endblock %}

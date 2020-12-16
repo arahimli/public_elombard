@@ -1,0 +1,46 @@
+{% load  static %}{% load i18n %}
+
+{% with package_payment_date_item.package.status as package_status %}
+
+<tr class="" id="list-item-{{ package_payment_date_item.id }}">
+    <td class="">
+        <input class="form-control"  type="hidden" name="list_item-old-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.id }}">
+        <button class="btn btn-danger" type="button" {% if package_status in non_operate or is_readonly %}disabled{% else %}onclick="deleteListItem('{% url 'panel:package-payments-remove' package_payment_date_item.id %}',{{ package_payment_date_item.id }},'list-item-')" {% endif %}>
+            Sil
+        </button>
+    </td>
+    <td class="">
+        <input class="form-control {% if package_payment_date_item.delay_day <= 0 %}debt-positive{% else %}debt-minus{% endif %}"  type="number" readonly name="delay_day-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.delay_day }}">
+    </td>
+    <td class="">
+        <input class="form-control" {% if package_status in non_operate or is_readonly %}readonly{% endif %}  type="text" name="paid_date-{{ package_payment_date_item.id }}[]" value="{{ package_payment_date_item.paid_date|date:'d-m-Y' }}">
+    </td>
+    <td class="">
+        <input class="form-control" readonly  type="text" name="shound_paid_date-{{ package_payment_date_item.id }}[]" value="{{ should_paid_date|date:'d-m-Y' }}">
+    </td>
+    <td class="">
+        <input class="form-control"  {% if package_status in non_operate or is_readonly %}readonly{% endif %}   type="number"  name="month_count-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.month_count}}">
+    </td>
+    <td class="">
+        <input class="form-control"  readonly="readonly"  type="number"  name="day_count-{{ package_payment_date_item.id }}[]"  value="{% if package_payment_date_item.month_count > 0 %}0{% else %}{{ package_payment_date_item.day_count}}{% endif %}">
+    </td>
+    <td class="">
+        <input class="form-control"  {% if package_status in non_operate or is_readonly or package_payment_date_item.delay_day > 0 %}readonly{% endif %}   type="number" step="0.01" name="pay_amount-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.pay_amount}}">
+    </td>
+    <td class="">
+        <input class="form-control"  type="number" step="0.01" readonly name="calculated_percent-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.calculated_percent}}">
+    </td>
+    <td class="">
+        <input class="form-control"  {% if package_status in non_operate or is_readonly %}readonly{% endif %}   type="number" step="0.01" name="paid_percent-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.paid_percent}}">
+    </td>
+    <td class="">
+        <input class="form-control {% if package_payment_date_item.percent_debt >= 0 %}debt-positive{% else %}debt-minus{% endif %}"  type="text" readonly name="percent_debt-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.percent_debt}}">
+    </td>
+    <td class="">
+        {% if package_payment_date_item.user %}{{ package_payment_date_item.user.first_name }} {{ package_payment_date_item.user.last_name }}{% else %}-{% endif %}
+    </td>
+    <td class="">
+        <input class="form-control" {% if package_status in non_operate or is_readonly %}readonly{% endif %} type="text" name="description-{{ package_payment_date_item.id }}[]"  value="{{ package_payment_date_item.description}}"  {% if package_status in non_operate or is_readonly %}readonly{% endif %}  >
+    </td>
+</tr>
+{% endwith %}

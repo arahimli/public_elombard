@@ -1,0 +1,13 @@
+{% if percent_debt_amount >= 0 and package_item.debt_amount <= 0 %}
+    {% if package_item.status == 'paided' %}
+        <a class="btn btn-danger" onclick="operationFunc('{% url 'panel:package-next' 'to-order' package_item.id %}')" style="color: #ffffff;width: 100%;">Sifariş ver</a>
+    {% elif package_item.status == 'ordered' %}
+        <a class="btn btn-success" style="color: #ffffff;width: 100%;" href="{% if package_item.get_last_order %}{% url 'panel:package-ordered-edit' package_item.get_last_order.id %}{% else %}{% endif %}">
+            Sifariş detalı
+        </a>
+    {% endif %}
+{% elif package_item_status == 'waiting' %}
+    <a class="btn btn-danger"  onclick="operationFunc('{% url 'panel:package-next' 'from-waiting' package_item.id %}')"  style="color: #ffffff;width: 100%;">Yoxlamadan çıxar</a>
+{% else %}
+    <a class="btn btn-warning" style="color: #ffffff;width: 100%;"  onclick="operationFunc('{% url 'panel:package-next' 'to-waiting' package_item.id %}')" >Yoxlamaya göndər</a>
+{% endif %}

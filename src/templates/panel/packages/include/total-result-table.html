@@ -1,0 +1,27 @@
+
+<table class="table table-hover mb-0">
+    <thead>
+        <tr>
+            <th scope="col">Alınan kredit</th>
+            <th scope="col">Ödənilmiş  kredit</th>
+            <th scope="col">Ödənilməmiş  kredit</th>
+            <th scope="col">Gecikmə</th>
+
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ general_amount }}</td>
+            <td>{{ general_paid_debt_amount }}</td>
+            <td>{{ general_debt_amount }}</td>
+            <td>{{ general_delay_day }}</td>
+
+            <td style="background: #ac0404;color: white;font-weight: bold;">{{ big_data.more_red }}</td>
+            <td style="background: red;font-weight: bold;">{{ big_data.red }}</td>
+            <td style="background: yellow;font-weight: bold;">{{ big_data.yellow }}</td>
+        </tr>
+    </tbody>
+</table>

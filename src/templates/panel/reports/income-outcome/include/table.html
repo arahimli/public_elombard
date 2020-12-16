@@ -1,0 +1,35 @@
+{% load static %}{% load i18n %}
+
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>{{ total_start_day }}</th>
+            <th></th>
+            <th>{{ total_end_day }}</th>
+            <th></th>
+            <th>{{ income }}</th>
+            <th>{{ outcome }}</th>
+            <th>{{ count }}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th>{% trans 'Tarix' %}</th>
+            <th>{% trans 'Təyinat' %}</th>
+            <th>{% trans 'Alan' %}</th>
+            <th>{% trans 'ödəyən' %}</th>
+            <th>{% trans 'Mədaxil' %}</th>
+            <th>{% trans 'Məxaric ' %}</th>
+            <th>{% trans 'Qeyd' %}</th>
+            <th>/</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% autoescape off %}
+        {{ list_html }}
+    {% endautoescape %}
+
+
+    </tbody>
+</table>

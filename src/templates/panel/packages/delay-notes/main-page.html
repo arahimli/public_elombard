@@ -1,0 +1,219 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+<style>
+  .customer-search-all-div tbody {
+      display:block;
+      max-height:300px;
+      overflow-y:auto;
+  }
+  .customer-search-all-div thead, .customer-search-all-div tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;
+  }
+  .customer-search-all-div thead {
+      width: calc( 100% - 1em )
+  }
+</style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {{ page_title }}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {{ page_title }}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+
+
+
+
+            <div class="row">
+
+                <div class="col-xl-12" id="customer-search-all-div">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">{% trans 'Paket filteri' %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="package-search-form" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <h4 class="text-center">
+                                            Müştəri
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-12"><hr></div>
+
+                                    <div class="mb-3  col-md-6 ">
+                                         <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-01-01">
+                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            {{ package_search_form.start_date }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3  col-md-6 ">
+                                         <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month|floatformat:-2 }}-{{ now.day|floatformat:-2 }}">
+                                            <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            {{ package_search_form.end_date }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            {{ package_search_form.amount_min }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                        {{ package_search_form.amount_max }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-sort-numeric-asc"></i></span>
+                                        {{ package_search_form.package_id }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-dollar"></i></span>
+                                        {{ package_search_form.currency }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-question"></i></span>
+                                        {{ package_search_form.status }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                            {{ package_search_form.department }}
+                                        </div>
+                                    </div>
+                                </div>Paket
+                            </form>
+                            <hr/>
+                            <a class="btn btn-success " style="width: 100%;text-align:center;"  href="javascript:void(0);" onclick="searchForm();"> {% trans 'Axtar' %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">Cəmi Nəticə</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive" id="total-result-table">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {{ page_title }}
+                                </h4>
+                                <hr/>
+                                <a class="btn btn-success " href="{% url 'panel:package-create' %}"> {% trans 'Əlavə et' %}</a>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-x: auto;" id="main-data-content">
+                            <div style="width: 100%;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('packages');
+    </script>
+
+    <script>
+        var search_form = $('#customer-search-form');
+        var main_data_content = $('#main-data-content');
+        var total_result_table = $('#total-result-table');
+        var customer_search_list = $('#customer-search-list');
+        $( "#customer-search-form :input" ).keyup(function() {
+          $.post('{% url 'panel:customer-ajax-list' %}',search_form.serialize())
+              .done(function (result) {
+                customer_search_list.html(result['result']);
+            })
+        });
+    </script>
+    <script>
+        var package_search_form = $('#package-search-form');
+        $( document ).ready(function() {
+            searchForm();
+        });
+        function searchForm() {
+            main_data_content.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            total_result_table.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+          $.post('',package_search_form.serialize())
+              .done(function (result) {
+                  main_data_content.html(result['main_result']);
+                  total_result_table.html(result['total_result']);
+                  console.log(result)
+            }).fail(function () {
+                  main_data_content.html('');
+                  total_result_table.html('');
+          });
+        }
+    </script>
+    {% csrf_token %}
+{% endblock %}

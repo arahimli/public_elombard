@@ -1,0 +1,1062 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+{% trans 'Paket' %}
+{% endblock %}
+{% block css_block %}
+<style>
+    tbody {
+      display:block;
+      max-height:400px;
+      overflow-y:auto;
+    }
+    thead, tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;
+    }
+    thead {
+      {#width: calc( 100% - 1em )#}
+    }
+    .debt-minus{
+        border: 1px solid #f00;
+        color: #f00;
+    }
+    .debt-positive{
+        border: 1px solid #028202;
+        color: #028202;
+    }
+    thead {
+        width: 100%;
+    }
+    .form-group {
+    margin-bottom: 0.5rem;
+    }
+    .general-list-main{
+        border-bottom: 1px solid #ccc;
+        /* padding: 2px; */
+        background: azure;
+    }
+    .general-list-item-1{
+        text-align: center;
+        border-right: 1px solid #ccc;
+        padding: 8px 5px;
+        color: #000;
+        font-weight: 500;
+        font-size: 15px;
+    }
+    .general-list-item-2{
+        text-align: center;
+        {#border-right: 1px solid #ccc;#}
+        padding: 8px 5px;
+        color: #000;
+        font-weight: 500;
+        font-size: 15px;
+    }
+    .table th {
+        text-align: center;
+    }
+    .table th {
+        padding: .25rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        white-space: pre-wrap !important;
+    }
+    .table td{
+        padding: .25rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+        {#white-space: pre-wrap !important;#}
+    }
+</style>
+{% endblock %}
+{% block content_block %}
+
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+{#            <!-- begin row -->#}
+{#            <div class="row">#}
+{#                <div class="col-md-12 m-b-30">#}
+{#                    <!-- begin page title -->#}
+{#                    <div class="d-block d-sm-flex flex-nowrap align-items-center">#}
+{#                        <div class="ml-auto d-flex align-items-center">#}
+{#                            <nav>#}
+{#                                <ol class="breadcrumb p-0 m-b-0">#}
+{#                                    <li class="breadcrumb-item">#}
+{#                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>#}
+{#                                    </li>#}
+{#                                    <li class="breadcrumb-item text-primary">#}
+{#                                        <a href="{% url 'panel:package-list' %}">#}
+{#                                            {% trans 'Paketlər' %}#}
+{#                                        </a>#}
+{#                                    </li>#}
+{#                                </ol>#}
+{#                            </nav>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <!-- end page title -->#}
+{#                </div>#}
+{#            </div>#}
+{#            <!-- end row -->#}
+
+            <!-- begin row -->
+            <div class="row">
+
+{#                <div class="col-xl-12">#}
+{#                    <div class="card">#}
+{#                        <div class="card-body">#}
+{#                            <div class="row">#}
+{#                                <a  class="col-md-12 btn btn-warning" target="_blank" href="{% url 'panel:package-waiting-list-package' package_item.id 'active' %}">Yoxlama Listi</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+                <div class="col-xl-9 col-lg-9  col-sm-12  col-xs-12 ">
+                    <div class="card card-statistics">
+                        <div class="card-body">
+                            <p>
+                                {{ form.errors }}
+                            </p>
+                            <form method="post"  enctype="multipart/form-data">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.packet_type.label }}</div>
+                                            </div>
+                                            {{ form.packet_type }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.department.label }}</div>
+                                            </div>
+                                            {{ form.department }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12" id="payment-button-html-div">
+
+                                            {% if percent_debt_amount.0 >= 0 and package_item.debt_amount <= 0 %}
+                                                {% if package_item.status == 'paided' %}
+                                                    <a class="btn btn-danger" onclick="operationFunc('{% url 'panel:package-next' 'to-order' package_item.id %}')" style="color: #ffffff;width: 100%;">Sifariş ver</a>
+                                                {% elif package_item.status == 'ordered' %}
+                                                    <a class="btn btn-success" style="color: #ffffff;width: 100%;" href="{% if package_item.get_last_order %}{% url 'panel:package-ordered-edit' package_item.get_last_order.id %}{% else %}{% endif %}">
+                                                        Sifariş detalı
+                                                    </a>
+                                                {% endif %}
+                                            {% elif waiting_package_item %}
+                                                <a class="btn btn-danger"  onclick="operationFunc('{% url 'panel:package-next' 'from-waiting' package_item.id %}')"  style="color: #ffffff;width: 100%;">Yoxlamadan çıxar</a>
+                                            {% else %}
+                                                <a class="btn btn-warning" style="color: #ffffff;width: 100%;"  onclick="operationFunc('{% url 'panel:package-next' 'to-waiting' package_item.id %}')" >Yoxlamaya göndər</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <div class="input-group mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.customer_name.label }}</div>
+                                            </div>
+                                            <a target="_blank" href="{% url 'panel:customer-edit' package_item.customer_id %}">
+                                                {{ form.customer_name }}
+                                            </a>
+                                            {{ form.customer_id }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.pledge_number.label }}</div>
+                                            </div>
+                                            {{ form.pledge_number }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.amount.label }}</div>
+                                            </div>
+                                            {{ form.amount }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.debt_amount.label }}</div>
+                                            </div>
+                                            {{ form.debt_amount }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.currency.label }}</div>
+                                            </div>
+                                            {{ form.currency }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.percent.label }}</div>
+                                            </div>
+                                            {{ form.percent }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">{% trans 'Annuitet ?' %}</span>
+                                            {{ form.annuitet }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+{#                                        <div class="input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">#}
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">{{ form.first_date.label }} <i class="fa fa-calendar"></i></span>
+                                            {{ form.first_date }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.status.label }}</div>
+                                            </div>
+                                            {{ form.status }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div  class="input-group mb-12 mr-sm-12">
+                                                {% csrf_token %}
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">{{ attachment_form.attachments.label }}</div>
+                                                </div>
+                                                <a class="btn btn-info" href="javascript:void(0);" data-toggle="modal" data-target="#myModal">
+                                                    <i class="fa fa-image"></i> &nbsp; {% trans 'Şəkillərə bax' %}
+                                                </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+{#                                <div class="form-row">#}
+{#                                    <div class="form-group col-md-4">#}
+{#                                        <div class="input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">#}
+{#                                            <span class="input-group-addon">{{ form.end_date.label }} <i class="fa fa-calendar"></i></span>#}
+{#                                            {{ form.end_date }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="form-group col-md-4">#}
+{#                                    </div>#}
+{#                                    <div class="form-group col-md-4">#}
+{#                                        <div class="input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">#}
+{#                                            <span class="input-group-addon">{{ form.pay_date.label }} <i class="fa fa-calendar"></i></span>#}
+{#                                            {{ form.pay_date }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.notes.label }}</div>
+                                            </div>
+                                            {{ form.notes }}
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="form-row">
+                                <button type="submit" class="col-md-6 btn btn-primary">{% trans 'Dəyiş' %}</button>
+                                <a  class="col-md-3 btn btn-warning" target="_blank" href="{% url 'panel:package-waiting-list-package' package_item.id 'active' %}">Yoxlama Listi</a>
+                                <a  class="col-md-3 btn btn-danger" target="_blank" href="{% url 'panel:package-daily-list' package_item.id %}">
+                                    <i class="fa fa-sticky-note"></i>
+                                    Gecikmə Qeydləri
+                                </a>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3  col-sm-12  col-xs-12 ">
+
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">Paket {{ package_item.id }} {% if package_item.annuitet %}<a href="#annuitet" role="button" class="btn btn-primary" data-toggle="modal"  style="padding: 2px 3px;background: green;color: #ffffff;">An</a>{% endif %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row general-list-main">
+                                <div class="col-md-6 general-list-item-1">Ay</div>
+                                <div class="col-md-6 general-list-item-2" id="general_dif_month"></div>
+                            </div>
+                            <div class="row general-list-main">
+                                <div class="col-md-6 general-list-item-1">Gün</div>
+                                <div class="col-md-6 general-list-item-2" id="general_dif_day"></div>
+                            </div>
+                            <div class="row general-list-main">
+                                <div class="col-md-6 general-list-item-1">Gecikmə</div>
+                                <div class="col-md-6 general-list-item-2" id="general-dif_date_day">
+
+                                </div>
+                            </div>
+                            <div class="row general-list-main">
+                                <div class="col-md-6 general-list-item-1">Qalıq məbləğ</div>
+                                <div class="col-md-6 general-list-item-2" id="general-debt_amount_id"></div>
+                            </div>
+                            <div class="row general-list-main">
+                                <div class="col-md-6 general-list-item-1">Faiz məbləğ</div>
+                                <div class="col-md-6 general-list-item-2" id="general-next_debt_amount_id"></div>
+                            </div>
+                            <div class="row general-list-main">
+                                <div class="col-md-6 general-list-item-1">Cəm məbləğ</div>
+                                <div class="col-md-6 general-list-item-2" id="general-total-debt_amount_id"></div>
+                            </div>
+                            <div class="row general-list-main">
+                                <div class="col-md-6 general-list-item-1">Aylıq Faiz</div>
+                                <div class="col-md-6 general-list-item-2" id="general-next_month_debt_amount"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+            <div class="row">
+
+                <div class="col-xl-12">
+                    <div class="card card-statistics">
+                        <div class="card-body" style="overflow: auto;">
+
+                            <table class="table table-striped table-bordered" style="width:100%;">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <th scope="col">Ödədiyi ay sayı</th>
+                                        <th scope="col">Cəmi borc</th>
+                                        <th scope="col">{% trans 'Əsas' %}</th>
+                                        <th scope="col">{% trans 'Hesablanmış Faiz' %}</th>
+                                        <th scope="col">{% trans 'Ödənilmiş Faiz' %}</th>
+                                        <th scope="col">{% trans 'Faiz Borcu' %}</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="">
+                                        <td class="">
+                                        </td>
+                                        <td class="">
+                                        </td>
+                                        <td class="" id=""></td>
+                                        <td class=""></td>
+                                        <td id="general-total_month">
+                                        </td>
+                                        <td class="" id="general-total_debt">
+
+                                        </td>
+                                        <td class="" id="general-paid_amount">
+
+                                        </td>
+                                        <td class="" id="general-percent_amount">
+
+                                        </td>
+                                        <td class="" id="general-paid_percent_amount">
+
+                                        </td>
+                                        <td class="" id="general-percent_debt_amount">
+
+                                        </td>
+                                        <td class=""></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <form class="table-responsive" style="overflow-x: auto;" method="post" id="payment-form-div" action="{% url 'panel:package-add-paymanet' package_item.id %}">
+                            {% csrf_token %}
+                                <table class="table table-striped table-bordered" style="width:100%;">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">/</th>
+                                            <th scope="col">{% trans 'Gecikmə' %}</th>
+                                            <th scope="col">{% trans 'Ödəmə tarixi' %}</th>
+                                            <th scope="col">{% trans 'Ödənməli tarixi' %}</th>
+                                            <th scope="col">{% trans 'Ay sayı' %}</th>
+                                            <th scope="col">{% trans 'Gün sayı' %}</th>
+                                            <th scope="col">{% trans 'Əsas' %}</th>
+                                            <th scope="col">{% trans 'Hesablanmış Faiz' %}</th>
+                                            <th scope="col">{% trans 'Ödənilmiş Faiz' %}</th>
+                                            <th scope="col">{% trans 'Faiz Borcu' %}</th>
+                                            <th scope="col">{% trans 'Əmıliyyatçı' %}</th>
+                                            <th scope="col">{% trans 'Qeyd' %}?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="payment-date-list">
+
+                                    </tbody>
+                                </table>
+                            </form>
+                            <form class="table-responsive" style="overflow-x: auto;" method="post" id="new-payment-form-div">
+                            {% csrf_token %}
+                                <table class="table table-striped table-bordered" style="width:100%;">
+                                    <thead class="thead-light" style="    display: none;">
+                                        <tr>
+                                            <th scope="col">/</th>
+                                            <th scope="col">{% trans 'Gecikmə' %}</th>
+                                            <th scope="col">{% trans 'Ödəmə tarixi' %}</th>
+                                            <th scope="col">{% trans 'Ay sayı' %}</th>
+                                            <th scope="col">{% trans 'Əsas' %}</th>
+                                            <th scope="col">{% trans 'Hesablanmış Faiz' %}</th>
+                                            <th scope="col">{% trans 'Ödənilmiş Faiz' %}</th>
+                                            <th scope="col">{% trans 'Faiz Borcu' %}</th>
+                                            <th scope="col">{% trans 'Qeyd' %}?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="new-payment-date">
+                                    </tbody>
+                                </table>
+                            </form>
+
+                            <div id="add-button-div">
+                                <button id="new-payment-generate-button" {% if package_item.status in non_operate %}disabled{% else %}onclick="generateNewForm('{% url 'panel:package-payments-new-generate' package_item.id %}')"{% endif %} class="btn btn-success" style="float: right;width: 300px;">
+                                    Yenisini daxil et
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+<!-- Modal -->
+
+<!-- The Modal -->
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Girov şəkilləri</h4>
+        <button type="button" class="Bağla" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+
+
+        <form method="post" id="package-attachments-form" action="{% url 'panel:package-atachment-upload' package_item.id %}" enctype="multipart/form-data" >
+            <div class="form-group col-md-12">
+                <div  class="input-group mb-12 mr-sm-12">
+                    {% csrf_token %}
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">{{ attachment_form.attachments.label }}</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">+</button>
+                    {{ attachment_form.attachments }}
+                </div>
+            </div>
+        </form>
+
+          <table class="table-responsive" style="text-align: center;">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Şəkil</th>
+                  <th scope="col">/</th>
+                </tr>
+              </thead>
+              <tbody>
+                  {% for product_image_item in product_images %}
+                        <tr id="product_image_item-{{ product_image_item.id }}">
+                          <th scope="row">-</th>
+                          <td><img src="{{ product_image_item.image.url }}" style="height: 50px;"></td>
+                          <td>
+                              <a href="javascript:void(0);" onclick="removeProductImage('{% url 'panel:package-product-image-remove' product_image_item.id %}',{{ product_image_item.id }})" class="btn btn-danger">x</a>
+                          </td>
+                        </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Bağla</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="ClosedReasonModal" tabindex="-1" role="dialog" aria-labelledby="ClosedReasonModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ClosedReasonModalLabel">Bağlanma səbəbi</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="closed_reason-form">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="input-group mb-12 mr-sm-12">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">{{ pcr_form.closed_reason.label }}</div>
+                        </div>
+                        <p>
+                            {{ pcr_form.closed_reason }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" onclick="submitClosedReasonForm();" class="btn btn-primary">Qeydə al</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{#    <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Launch modal</a>#}
+
+<div class="modal" id="annuitet" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-full" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center">Annuitet</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-4" id="result">
+                    <form id="annuitet-calculate-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Kerdit Məbləği</td>
+                                            <td>{{ annuitet_calculated_form.amount }}</td>
+                                            <td>Aylıq ödəniş</td>
+                                            <td id="middle_amount"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aylıq faiz</td>
+                                            <td>{{ annuitet_calculated_form.percent }}</td>
+                                            <td>Ümumi faiz</td>
+                                            <td id="general_percent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Müddət</td>
+                                            <td>{{ annuitet_calculated_form.month_count }}</td>
+                                            <td>Effektiv faiz</td>
+                                            <td id="effective_percent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tarix</td>
+                                            <td>{{ annuitet_calculated_form.a_first_date }}</td>
+                                            <td></td>
+                                            <td id="effective_percent"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" onclick="calculateAnnuitet('{% url 'panel:package-annuitet' package_item.id %}')" class="btn btn-success">
+                                    Hesabla
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                <hr/>
+                <div class="" id="annuitet-result-table">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+{% block js_block %}
+
+
+
+<script>
+function eventPayDate(event) {
+  var x = event.which;
+  if(x==13){
+    document.getElementById('id_pd_month_count').focus();
+    console.log("odenis qwyde alindi: " + x);
+    newDataPost();
+  }
+  console.log("kliklendi" + x);
+}
+function eventMonth(event) {
+  var x = event.which;
+  if(x==13){
+    document.getElementById('id_pd_pay_amount').focus();
+    console.log("odenis qwyde alindi: " + x);
+    newDataPost();
+  }
+  console.log("kliklendi" + x);
+}
+function eventPayAmount(event) {
+  var x = event.which;
+  if(x==13){
+    document.getElementById('id_pd_paid_percent').focus();
+    console.log("odenis qwyde alindi: " + x);
+    newDataPost();
+  }
+  console.log("kliklendi" + x);
+}
+function eventAction(event) {
+  var x = event.which;
+  if(x==13){
+    console.log("odenis qwyde alindi: " + x);
+    yeniListItemAdd();
+  }
+  console.log("kliklendi" + x);
+}
+</script>
+
+
+        <script>
+        {#var id_attachments = $('#id_attachments');#}
+        {#document.getElementById("id_attachments").removeAttribute("required");#}
+{#            {% if package_item.status != 'active' and package_item.status != 'waiting' %}#}
+{#                {% if package_item.closed_reason != '' and package_item.closed_reason is not None %}#}
+{#                {% else %}#}
+{#                    $('#ClosedReasonModal').modal('toggle');#}
+{#                {% endif %}#}
+{#            {% endif %}#}
+    </script>
+
+		<script src="{% static 'main/assets/cropper/jquery.min.js' %}"></script>
+		<script src="{% static 'main/assets/cropper/bootstrap.min.js' %}"></script>
+        <script type='text/javascript' src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+
+    <script>
+        activeMenu('packages');
+
+
+
+
+
+
+    function operationFunc($next_page) {
+        swal({
+            title: 'Əminsiniz?',
+            text: "Bu əməliyyatı yerinə yetirməyə əminsiniz?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Bəli, əminəm',
+            cancelButtonText: 'Xeyr, imtina et',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: true,
+            reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                window.location = $next_page;
+            } else if (
+                // Read more about handling dismissals
+                result.dismiss === swal.DismissReason.cancel
+            ) {
+                swal(
+                    'İmtina edildi',
+                    'Əməliyyatı aparmaqdan imtina etdiniz!',
+                    'error'
+                )
+            }
+        });
+
+    }
+
+
+
+
+
+
+        var dynamic_form = $('#payment-form-div');
+        var new_payment_form = $('#new-payment-form-div');
+        var id_debt_amount = $('#id_debt_amount');
+        var id_status = $('#id_status');
+        var debt_amount_id = $('#debt_amount_id');
+        var payment_date_list = $('#payment-date-list');
+        var res_button_html = $('#payment-button-html-div');
+        var add_button_div = $('#add-button-div');
+        var new_payment_date = $('#new-payment-date');
+        var new_payment_generate_button = $('#new-payment-generate-button');
+
+
+        var general_debt_amount_id_x = document.getElementById("general-debt_amount_id");
+        var general_paid_amount_x = document.getElementById("general-paid_amount");
+        var general_total_debt_amount_id_x = document.getElementById("general-total-debt_amount_id");
+        var general_next_month_debt_amount_x = document.getElementById("general-next_month_debt_amount");
+        var general_dif_date_day_x = document.getElementById("general-dif_date_day");
+        var general_percent_amount_x = document.getElementById("general-percent_amount");
+        var general_next_debt_amount_id_x = document.getElementById("general-next_debt_amount_id");
+        var general_paid_percent_amount_x = document.getElementById("general-paid_percent_amount");
+        var general_percent_debt_amount_x = document.getElementById("general-percent_debt_amount");
+        var general_total_debt_x = document.getElementById("general-total_debt");
+        var general_total_month_x = document.getElementById("general-total_month");
+        var general_dif_month_x = document.getElementById("general_dif_month");
+        var general_dif_day_x = document.getElementById("general_dif_day");
+
+
+        var general_dif_date_day = $('#general-dif_date_day');
+        var general_debt_amount_id = $('#general-debt_amount_id');
+        var general_paid_amount = $('#general-paid_amount');
+        var general_percent_amount = $('#general-percent_amount');
+        var general_paid_percent_amount = $('#general-paid_percent_amount');
+        var general_percent_debt_amount = $('#general-percent_debt_amount');
+        var general_total_debt = $('#general-total_debt');
+        var general_dif_month = $('#general_dif_month');
+        var general_dif_day = $('#general_dif_day');
+
+
+
+        function generateNewForm($url){
+            $.post($url,{'csrfmiddlewaretoken':'{{ csrf_token }}'})
+                .done(function (result) {
+                    new_payment_date.html(result['result_html']);
+                });
+        }
+
+        dynamic_form.change(function() {
+            console.log(dynamic_form.serialize());
+          submitOldFormData();
+        });
+        function deleteListItem($url,$id,$el_id) {
+            $.post($url,{'csrfmiddlewaretoken':'{{ csrf_token }}'})
+                .done(function (result) {
+                    {#$('#'+$el_id+$id).remove();#}
+                    {#submitOldFormData();#}
+                    refreshGeneral();
+                });
+        }
+        function submitOldFormData() {
+            $.post('{% url 'panel:package-payments-edit' package_item.id %}',dynamic_form.serialize())
+                .done(function (result) {
+                    refreshGeneral();
+                })
+        }
+        var closed_reason_form = $('#closed_reason-form');
+        function submitClosedReasonForm() {
+            $.post('{% url 'panel:package-closed-reason' package_item.id %}',closed_reason_form.serialize())
+                .done(function (result) {
+                    $('#ClosedReasonModal').modal('toggle');
+                })
+        }
+        function refreshOldFormData() {
+            $.post('{% url 'panel:package-payments-refresh' package_item.id %}',dynamic_form.serialize())
+                .done(function (result) {
+                    if(result['show_closed_reason']){
+                        $('#ClosedReasonModal').modal('toggle');
+                    }
+                    id_status.val(result['package_status']);
+                    payment_date_list.html(result['res_html']);
+                    res_button_html.html(result['res_button_html']);
+                    add_button_div.html(result['add_button_html']);
+
+                    id_debt_amount.val(result['debt_amount']);
+                    general_debt_amount_id_x.innerHTML = result['debt_amount'];
+                    if(result['percent_debt_amount']>=0) {
+                        general_percent_debt_amount.addClass('debt-positive').removeClass('debt-minus');
+                     } else {
+                        general_percent_debt_amount.removeClass('debt-positive').addClass('debt-minus');
+                     }
+                    general_paid_amount_x.innerHTML = result['paid_amount'];
+                    general_total_month_x.innerHTML = result['month_count'];
+                    general_next_debt_amount_id_x.innerHTML = result['total_debt_extra'];
+                    general_dif_day_x.innerHTML = result['general_dif_day'];
+                    general_dif_month_x.innerHTML = result['general_dif_month'];
+                    general_percent_debt_amount_x.innerHTML = result['percent_debt_amount'];
+                    general_total_debt_amount_id_x.innerHTML = result['total_debt'];
+                    general_total_debt_x.innerHTML = result['total_debt'];
+                    general_percent_amount_x.innerHTML = result['percent_amount'];
+                    general_next_month_debt_amount_x.innerHTML = result['next_month_debt_amount'];
+                    general_dif_date_day_x.innerHTML = result['dif_date_day'];
+                    general_paid_percent_amount_x.innerHTML = result['paid_percent_amount'];
+
+                })
+
+        }
+
+
+
+
+
+
+        var id_pd_pay_amount = $('#id_pd_pay_amount');
+        var id_pd_month_count = $('#id_pd_month_count');
+        var id_pd_paid_date = $('#id_pd_paid_date');
+        var id_pd_day_count = $('#id_pd_day_count');
+        var id_pd_percent_debt = $('#id_pd_percent_debt');
+        var id_pd_paid_percent = $('#id_pd_paid_percent');
+        var id_pd_calculated_percent = $('#id_pd_calculated_percent');
+        var id_pd_delay_day = $('#id_pd_delay_day');
+        var debt_money = {{ package_item.debt_amount }};
+        var id_pd_percent_amount = $('#id_pd_percent_amount');
+        var id_pd_debt_amount = $('#id_pd_debt_amount');
+        var pd_amount = $('#id_pd_amount');
+
+        function newDataPost(){
+
+            $.post('{% url 'panel:package-payment-new-check' package_item.id %}',new_payment_form.serialize())
+            .done(function (result) {
+                document.getElementById("id_pd_calculated_percent").value = result['calculated_amount'];
+                document.getElementById("id_pd_paid_percent").value = result['calculated_amount'];
+                {#document.getElementById("id_pd_delay_day").value = result['dif_days'];#}
+                differenceDebtAmount();
+                id_status.val(result['package_status']);
+                $('#id_pd_delay_day').val(result['dif_days']);
+                general_paid_amount.text(result['paid_amount']);
+                general_percent_debt_amount.text(result['percent_debt_amount']);
+                if(result['percent_debt_amount']>=0){
+                    general_percent_debt_amount.addClass('debt-positive').removeClass('debt-minus');
+                }else{
+                    general_percent_debt_amount.removeClass('debt-positive').addClass('debt-minus');
+                }
+                if(result['general_dif_month'] <= result['pd_month_count']){
+                    document.getElementById("id_pd_pay_amount").readOnly = false;
+                }else{
+                    document.getElementById("id_pd_pay_amount").readOnly = true;
+                }
+
+
+                general_percent_debt_amount.text(result['percent_debt_amount']);
+                if(result['percent_debt_amount']>=0){
+                    general_percent_debt_amount.addClass('debt-positive').removeClass('debt-minus');
+                }else{
+                    general_percent_debt_amount.removeClass('debt-positive').addClass('debt-minus');
+                }
+
+                general_paid_percent_amount.text(result['paid_percent_amount']);
+                general_percent_amount.text(result['percent_amount']);
+                general_total_debt.text(result['total_debt']);
+                general_total_debt.text(result['total_debt']);
+            });
+        }
+
+        $(document.body).delegate('#id_pd_month_count', 'change', function() {
+            if($('#id_pd_month_count').val() != null && $('#id_pd_month_count').val()>0){
+
+                $('#id_pd_day_count').val('0');
+                {#$('#id_pd_day_count').attr('readonly', true);#}
+            }else{
+                $('#id_pd_day_count').val($('#id_pd_day_count').attr('data-value'));
+                {#$('#id_pd_day_count').attr('readonly', false);#}
+                console.log($('#id_pd_day_count').val())
+            }
+            newDataPost();
+
+         });
+        $(document.body).delegate('#id_pd_paid_date', 'change', function() {
+            newDataPost();
+
+         });
+        $(document.body).delegate('#id_pd_pay_amount', 'change', function() {
+            newDataPost();
+        });
+        $(document.body).delegate('#id_pd_paid_percent', 'change', function() {
+            differenceDebtAmount();
+        });
+        function refreshGeneral() {
+            new_payment_date.html('');
+            refreshOldFormData();
+        }
+        function yeniListItemAdd() {
+            $.post('{% url 'panel:package-payment-new-add' package_item.id %}',new_payment_form.serialize())
+                .done(function (result) {
+                    if(result['message_code'] == '1'){
+                        refreshGeneral();
+                    }
+                });
+        }
+        function differenceDebtAmount(){
+                id_pd_paid_percent_val = document.getElementById("id_pd_paid_percent").value ;
+                id_pd_calculated_percent_val = document.getElementById("id_pd_calculated_percent").value;
+                if(id_pd_paid_percent_val != '' && id_pd_calculated_percent_val != '') {
+                    document.getElementById("id_pd_percent_debt").value = (id_pd_paid_percent_val - id_pd_calculated_percent_val).toFixed(2);
+                    if(id_pd_paid_percent_val - id_pd_calculated_percent_val < 0){
+                        document.getElementById("id_pd_percent_debt").classList.remove("debt-positive");
+                        document.getElementById("id_pd_percent_debt").classList.add("debt-minus");
+                    }else {
+                        document.getElementById("id_pd_percent_debt").classList.add("debt-positive");
+                        document.getElementById("id_pd_percent_debt").classList.remove("debt-minus");
+                    }
+                }
+        }
+
+
+        id_pd_pay_amount.change(function() {
+
+          if(id_pd_pay_amount.val() > 0 && id_pd_pay_amount.val()!=''){
+            pd_amount.val(id_pd_pay_amount.val() - id_pd_percent_amount.val());
+            id_pd_debt_amount.val(debt_money - (id_pd_pay_amount.val() - id_pd_percent_amount.val()));
+            console.log(pd_amount.val());
+          }
+        });
+
+        var payment_form_div = $('#payment-form-div');
+
+        payment_form_div.submit(function( event ) {
+            event.preventDefault();
+            $.post('{% url 'panel:package-add-paymanet' package_item.id %}',payment_form_div.serialize())
+                .done((function (result) {
+                    console.log(result);
+                    location.reload();
+                }))
+        });
+
+
+
+
+
+    $( document ).ready(function() {
+        setTimeout(function(){
+            refreshGeneral();
+        }, 100);
+        console.log( "ready!" );
+    });
+
+
+
+        function removeProductImage($url,$id) {
+              $.post($url,{'csrfmiddlewaretoken':'{{ csrf_token }}'})
+                .done(function (result) {
+                    if(result['message_code'] == 1){
+                        document.getElementById('product_image_item-'+$id).remove();
+                    }
+                });
+        }
+
+
+
+
+
+        {% if success_message %}
+            swal({
+                type: 'success',
+                title: '{% trans 'Success' %}',
+                text: '{{ success_message }}'
+            });
+        {% endif %}
+
+
+
+
+        var package_attachments = $('#package-attachments-form');
+        function submitAttachment($url) {
+            console.log(package_attachments.serialize());
+            alert(package_attachments.serialize());
+              $.post($url,package_attachments.serialize())
+                .done(function (result) {
+                    if(result['message_code'] == 1){
+                        {#document.getElementById('product_image_item-'+$id).remove();#}
+                    }
+                });
+        }
+
+
+      $("#id_a_first_date").inputmask();
+        var annuitet_calculate_form = $('#annuitet-calculate-form');
+        var annuitet_result_table = $('#annuitet-result-table');
+        var middle_amount = $('#middle_amount');
+        var effective_percent = $('#effective_percent');
+        var general_percent = $('#general_percent');
+
+        function calculateAnnuitet($url) {
+            annuitet_result_table.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            {#console.log(annuitet_calculate_form.serialize());#}
+            {#alert(annuitet_calculate_form.serialize());#}
+              $.post($url,annuitet_calculate_form.serialize())
+                .done(function (result) {
+                    if(result['code'] == 'success'){
+                        annuitet_result_table.html(result['result']);
+                        middle_amount.html(result['middle_amount']);
+                        general_percent.html(result['general_percent']);
+                        effective_percent.html(result['effective_percent']);
+                    }else{
+                        annuitet_result_table.html('');
+                        middle_amount.html(0);
+                        general_percent.html(0);
+                        effective_percent.html(0);
+                    }
+                });
+        }
+
+
+
+
+    var id_pd_month_count_input = document.getElementById("id_pd_month_count");
+    $( "#id_pd_month_count" ).keyup(function() {
+      alert( "Handler for .keyup() called." );
+    });
+
+    $('#id_pd_month_count').bind("enterKey",function(e){
+       alert("salam")
+    });
+    {#id_pd_month_count_input.addEventListener("keyup", function(event) {#}
+    {#  // Number 13 is the "Enter" key on the keyboard#}
+    {#    alert("salam1");#}
+    {#  if (event.keyCode === 13) {#}
+    {#    // Cancel the default action, if needed#}
+    {#        alert("salam");#}
+    {#      event.preventDefault();#}
+    {##}
+    {#    // Trigger the button element with a click#}
+    {#  }#}
+    {# }); #}
+    </script>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Işçi" %} {% if user_obj %} - {{ user_obj.first_name }} {{ user_obj.last_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:employee-list' %}">{% trans 'Işçilər' %}</a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Işçi" %} {% if user_obj %} - {{ user_obj.first_name }} {{ user_obj.last_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Işçi" %} {% if user_obj %} - {{ user_obj.first_name }} {{ user_obj.last_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        {{ employee_form.errors }}
+                        <form class="card-body" method="post" action="">
+                            {% csrf_token %}
+                            <div class="selects-contant">
+                                <div class="input-group mb-3 selects-contant">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">{{ employee_form.department.label }}</span>
+                                    </div>
+                                    {{ employee_form.department }}
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ employee_form.name.label }}</span>
+                                </div>
+                                {{ employee_form.name }}
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ employee_form.surname.label }}</span>
+                                </div>
+                                {{ employee_form.surname }}
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ employee_form.email.label }}</span>
+                                </div>
+                                {{ employee_form.email }}
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ employee_form.phone.label }}</span>
+                                </div>
+                                {{ employee_form.phone }}
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ employee_form.password.label }}</span>
+                                </div>
+                                {{ employee_form.password }}
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ employee_form.retype_password.label }}</span>
+                                </div>
+                                {{ employee_form.retype_password }}
+                            </div>
+{#                            <div class="input-group mb-3">#}
+{#                                <div class="input-group-prepend">#}
+{#                                    <span class="input-group-text" id="basic-addon1">{{ employee_form.profile_picture.label }}</span>#}
+{#                                </div>#}
+{#                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#}
+{#                                {{ employee_form.profile_picture }}#}
+{#                            </div>#}
+                            
+                                <button type="submit" class="btn btn-block btn-success">
+                                    {% if user_obj %} - {% trans 'Dəyiş' %} {% else %} {% trans 'Əlavə et' %} {% endif %}
+                                </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('personal-control');
+    </script>
+
+
+<script>
+    {% if success_message %}
+        swal({
+            type: 'success',
+            title: '{% trans 'Success' %}',
+            text: '{{ success_message }}',
+        });
+    {% endif %}
+</script>
+{% endblock %}

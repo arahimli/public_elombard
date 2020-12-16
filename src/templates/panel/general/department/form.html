@@ -1,0 +1,123 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Department" %} {% if data_obj %} - {{ data_obj.title }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:department-list' %}">{% trans 'Departments' %}</a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Department" %} {% if data_obj %} - {{ data_obj.title }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Department" %} {% if data_obj %} - {{ data_obj.full_name }}{% else %} {% trans 'Əlavə et' %} {% endif %}
+                                </h4>
+                            </div>
+                        </div>
+                        <form class="card-body" method="post" action="">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'Başlıq' %}</span>
+                                </div>
+                                {{ form.title }}
+                            </div>
+                            {% if form.title.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'İp' %}</span>
+                                </div>
+                                {{ form.ip }}
+                            </div>
+                            {% if form.ip.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.ip.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{% trans 'Adres' %}</span>
+                                </div>
+                                {{ form.address }}
+                            </div>
+                            {% if form.address.errors %}
+                                <div class="alert alert-danger mb-3" role="alert">
+                                    {{ form.address.errors }}
+                                </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-block btn-success">
+                                {% if data_obj %} - {% trans 'Dəyiş' %} {% else %} {% trans 'Əlavə et' %} {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('advanced-datas');
+        activeMenu('advanced-datas-2');
+    </script>
+
+
+
+
+
+<script>
+    {% if success_message %}
+        swal({
+            type: 'success',
+            title: '{% trans 'Success' %}',
+            text: '{{ success_message }}'
+        });
+    {% endif %}
+</script>
+
+{% endblock %}

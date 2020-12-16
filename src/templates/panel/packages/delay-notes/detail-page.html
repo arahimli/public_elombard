@@ -1,0 +1,121 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+<style>
+  .customer-search-all-div tbody {
+      display:block;
+      max-height:300px;
+      overflow-y:auto;
+  }
+  .customer-search-all-div thead, .customer-search-all-div tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;
+  }
+  .customer-search-all-div thead {
+      width: calc( 100% - 1em )
+  }
+</style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {{ page_title }}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {{ package_item.customer.full_name }} {{ package_item.pledge_number }}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title text-center">
+
+                                    <a target="_blank" href="{% url 'panel:customer-edit' package_item.customer_id %}">
+                                        {{ package_item.customer.full_name }}
+                                    </a>
+                                    -
+                                    <a target="_blank" href="{% url 'panel:package-edit' package_item.id %}">
+                                        {{ package_item.pledge_number }}
+                                    </a>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-x: auto;" id="main-data-content">
+
+                        <div class="row">
+                            {% for list_item in list %}
+                                <div class="col-md-6">
+                                    <div class="card card-statistics ">
+                                        <div class="card-body">
+                                            <p class="card-text">
+                                                {{ list_item.content }}
+                                            </p>
+                                            <hr>
+                                            <div class="card-text row">
+
+                                                <div class="col-md-6">
+                                                    {{ list_item.date|date:'d-m-Y H:i' }}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    {% if list_item.user %}
+                                                        <a target="_blank" href="{% url 'panel:employee-edit' list_item.user.id %}">
+                                                            {{ list_item.user.first_name }} {{ list_item.user.last_name }}
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('packages');
+    </script>
+{% endblock %}

@@ -1,0 +1,425 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+{% trans 'Paket yarat' %}
+{% endblock %}
+{% block css_block %}
+<style>
+  tbody {
+      display:block;
+      max-height:300px;
+      overflow-y:auto;
+  }
+  thead, tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;
+  }
+  thead {
+      width: calc( 100% - 1em )
+  }
+</style>
+{% endblock %}
+{% block content_block %}
+
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    {{ form.errors }}
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>{% trans 'Paket yarat' %}</h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item text-primary">
+                                        <a href="{% url 'panel:package-list' %}">
+                                            {% trans 'Paketlər' %}
+                                        </a>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+
+
+            <div class="row">
+
+                <div class="col-xl-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">{% trans 'Müştərilər' %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="customer-search-form" method="post" >
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-3 mb-2">
+                                        <label for="{{ search_form.s_full_name.id_for_label }}">{{ search_form.s_full_name.label }}</label>
+                                        {{ search_form.s_full_name }}
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="{{ search_form.s_serial_number.id_for_label }}">{{ search_form.s_serial_number.label }}</label>
+                                        {{ search_form.s_serial_number }}
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="{{ search_form.s_fin.id_for_label }}">{{ search_form.s_fin.label }}</label>
+                                        {{ search_form.s_fin }}
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="{{ search_form.id_number.id_for_label }}">{{ search_form.id_number.label }}</label>
+                                        {{ search_form.id_number }}
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="table-responsive">
+                                <table class="table mb-0" style="height: 200px">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">{% trans 'Ad soyad' %}</th>
+                                            <th scope="col">{% trans 'Seriya nömrəsi' %}</th>
+                                            <th scope="col">{% trans 'Fin kod' %}</th>
+                                            <th scope="col">{% trans 'Id nömrəsi' %}</th>
+                                            <th scope="col">/</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="customer-search-list">
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- begin row -->
+            <div class="row">
+
+                <div class="col-xl-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">{% trans 'Paket yarat' %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form method="post"  enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.packet_type.label }}</div>
+                                            </div>
+                                            {{ form.packet_type }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.department.label }}</div>
+                                            </div>
+                                            {{ form.department }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.customer_name.label }}</div>
+                                            </div>
+                                            {{ form.customer_name }}
+                                            {{ form.customer_id }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.pledge_number.label }}</div>
+                                            </div>
+                                            {{ form.pledge_number }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.amount.label }}</div>
+                                            </div>
+                                            {{ form.amount }}
+                                        </div>
+                                    </div>
+{#                                    <div class="form-group col-md-4">#}
+{#                                        <div class="input-group mb-12 mr-sm-12">#}
+{#                                            <div class="input-group-prepend">#}
+{#                                                <div class="input-group-text">{{ form.amount_dollar.label }}</div>#}
+{#                                            </div>#}
+{#                                            {{ form.amount_dollar }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.currency.label }}</div>
+                                            </div>
+                                            {{ form.currency }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.percent.label }}</div>
+                                            </div>
+                                            {{ form.percent }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.annuitet.label }}</div>
+                                            </div>
+                                            <p>
+                                                <label for="{{ form.annuitet.id_for_label }}">Annuitet</label>
+                                                {{ form.annuitet }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-6" data-value="0" id="generate-product-form">
+                                        {% for product_item in products %}
+                                            <a href="javascript:void(0);" onclick="generateProductForm({{ product_item.id }})" class="btn btn-success" style="">+ {{ product_item.title }}</a>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                                <div id="generate-product-div">
+
+                                </div>
+                            {{ formset.management_form }}
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+{#                                        <div class="input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">#}
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">{{ form.first_date.label }} <i class="fa fa-calendar"></i></span>
+                                            {{ form.first_date }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.status.label }}</div>
+                                            </div>
+                                            {{ form.status }}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+{#                                <div class="form-row">#}
+{#                                    <div class="form-group col-md-4">#}
+{#                                        <div class="input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">#}
+{#                                            <span class="input-group-addon">{{ form.end_date.label }} <i class="fa fa-calendar"></i></span>#}
+{#                                            {{ form.end_date }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="form-group col-md-4">#}
+{#                                    </div>#}
+{#                                    <div class="form-group col-md-4">#}
+{#                                        <div class="input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month }}-{{ now.day }}-">#}
+{#                                            <span class="input-group-addon">{{ form.pay_date.label }} <i class="fa fa-calendar"></i></span>#}
+{#                                            {{ form.pay_date }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <div class="input-group mb-12 mr-sm-12">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">{{ form.notes.label }}</div>
+                                            </div>
+                                            {{ form.notes }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">{% trans 'Əlavə et' %}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+
+{% endblock %}
+{% block js_block %}
+    <script>
+    var generate_product_form = $('#generate-product-form');
+    var generate_product_div = $('#generate-product-div');
+    var form_idx = $('#id_form-TOTAL_FORMS').val();
+    function generateProductForm($type_id) {
+        {#alert(generate_product_form.attr('data-value'));#}
+        $.post('{% url 'panel:product-type-generate-ajax' %}' ,{'index':generate_product_form.attr('data-value'), 'type':$type_id,'csrfmiddlewaretoken':'{{ csrf_token }}'})
+            .done(function (result) {
+                {#alert('sasas');#}
+                if(result['code'] == 1){
+                    generate_product_form.attr('data-value',result['index']);
+                    generate_product_div.append(result['result_html']);
+                    $('#id_form-TOTAL_FORMS').val(parseInt(result['index']) + 1);
+                }
+                console.log(result);
+            });
+    }
+
+    activeMenu('packages');
+    </script>
+
+
+    <script>
+        {% if base_profile.usertype == 2 %}
+            $( document ).ready(function() {
+                document.getElementById("id_department").disabled = true;
+            });
+        {% endif %}
+        {% if base_profile.usertype != 2 %}
+            $( document ).ready(function() {
+                 $("#id_first_date").prop('readonly', false);
+                {#document.getElementById("id_first_date").readonly = false;#}
+            });
+        {% endif %}
+    </script>
+
+
+    <script>
+        var id_currency = $('#id_currency');
+        var currency_percent = {
+        {% for x_item in currencies %}
+            'currency-{{ x_item.id }}':{{ x_item.value|floatformat:'-2' }}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+        };
+        function percentData() {
+            $('#id_percent').val(currency_percent['currency-'+id_currency.val()]);
+        }
+        id_currency.change(function() {
+            if(id_currency.val() != ''){
+                $('#id_percent').val(0)
+            }else{
+                $('#id_percent').val(0)
+            }
+        });
+        $( document ).ready(function() {
+            if(id_currency.val() != ''){
+                $('#id_percent').val(0)
+            }else{
+                $('#id_percent').val(0)
+            }
+        });
+    </script>
+
+
+
+    <script>
+    var id_product = $('#id_product');
+    var id_product_type = $('#id_product_type');
+
+    $( document ).ready(function() {
+            getProductTypes('{% url 'panel:product-type-ajax' %}');
+    });
+
+    id_product.change(function () {
+       getProductTypes('{% url 'panel:product-type-ajax' %}');
+    });
+    function getProductTypes($url) {
+        $.post(
+            $url,{'id':id_product.val(),'csrfmiddlewaretoken':'{{ csrf_token }}'}
+        ).done(function (result) {
+            id_product_type.html(result['result']);
+
+        });
+    }
+    </script>
+    <script>
+        {% if success_message %}
+            swal({
+                type: 'success',
+                title: '{% trans 'Success' %}',
+                text: '{{ success_message }}'
+            });
+        {% endif %}
+    </script>
+
+
+    <script>
+        var search_form = $('#customer-search-form');
+        var customer_search_list = $('#customer-search-list');
+        $( "#customer-search-form :input" ).keyup(function(event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                searchCustomer();
+            }
+        });
+        function searchCustomer() {
+          $.post('{% url 'panel:customer-ajax-list' %}',search_form.serialize())
+              .done(function (result) {
+                customer_search_list.html(result['result']);
+            })
+        }
+    </script>
+    <script>
+        function selectCustomer($id, $name) {
+            $( ".customer-button-item" ).each(function( index ) {
+               $( this ).removeClass('btn-info').removeClass('btn-success').addClass('btn-info').text('{% trans 'Select' %}');
+            });
+            var customer_button_item = $('#customer-button-item-'+$id);
+            if(customer_button_item.hasClass('btn-info')){
+                customer_button_item.addClass('btn-success').removeClass('btn-info');
+                customer_button_item.html('{% trans 'Selected' %}');
+                $('#id_customer_name').val($name);
+                $('#id_customer_id').val($id);
+            }else if(customer_button_item.hasClass('btn-success')){
+                customer_button_item.addClass('btn-info').removeClass('btn-success');
+                customer_button_item.text('{% trans 'Select' %}');
+                $('#id_customer_name').val('');
+                $('#id_customer_id').val('');
+            }
+        }
+    </script>
+{% endblock %}

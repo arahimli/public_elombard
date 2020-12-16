@@ -1,0 +1,110 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {{ data_obj.package.pledge_number }}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:package-waiting-list' 'active' %}">{% trans 'Yoxlamada olanlar' %}</a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {{ data_obj.package.pledge_number }}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {{ data_obj.package.pledge_number }}  --  {{ data_obj.package.customer.full_name }}
+                                </h4>
+                            </div>
+                        </div>
+                        {{ form.errors }}
+                        <form class="card-body" method="post" action="">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">{{ form.date.label }}</span>
+                                </div>
+                                {{ form.date }}
+                            </div>
+                            
+                                <button type="submit" class="btn btn-block btn-success">
+                                    {% if data_obj %} - {% trans 'Dəyiş' %} {% else %} {% trans 'Əlavə et' %} {% endif %}
+                                </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('personal-control');
+    </script>
+
+
+
+<script>
+    {% if success_message %}
+        swal({
+            type: '{% if code_message == 1 %}success{% else %}error{% endif %}',
+            title: '{% if code_message == 1 %}Uğurlu{% else %}Uğursuz{% endif %}',
+            text: '{{ success_message }}',
+        });
+    {% endif %}
+</script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://rawgit.com/RobinHerbots/jquery.inputmask/3.x/dist/jquery.inputmask.bundle.js"></script>
+<input type="text">
+    <script>
+        $('#id_date').inputmask("datetime",{
+             mask: "1-2-y h:s",
+             placeholder: "dd-mm-yyyy hh:mm",
+             leapday: "-02-29",
+             separator: "-",
+             alias: "dd-mm-yyyy"
+        });
+    </script>
+
+
+{% endblock %}

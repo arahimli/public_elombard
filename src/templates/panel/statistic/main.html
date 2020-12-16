@@ -1,0 +1,161 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+
+{% endblock %}
+{% block css_block %}
+<style>
+  .customer-search-all-div tbody {
+      display:block;
+      max-height:300px;
+      overflow-y:auto;
+  }
+  .customer-search-all-div thead, .customer-search-all-div tbody tr {
+      display:table;
+      width:100%;
+      table-layout:fixed;
+  }
+  .customer-search-all-div thead {
+      width: calc( 100% - 1em )
+  }
+    thead{
+        background: aqua;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background: #ffffff;
+    }
+  .table td, .table th {
+    border-right: 1px solid #dee2e6;
+}
+</style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {{ page_title }}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {{ page_title }}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+
+
+
+
+            <div class="row">
+
+                <div class="col-xl-12" id="customer-search-all-div">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">{% trans 'Paket filteri' %}</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form id="package-search-form" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <h3 class="text-center">
+                                            Filter
+                                        </h3>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ search_form.month }}
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        {{ search_form.year}}
+                                    </div>
+                                </div>
+                            </form>
+                            <hr/>
+                            <a class="btn btn-success " style="width: 100%;text-align:center;"  href="javascript:void(0);" onclick="searchForm2();"> {% trans 'Axtar' %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {{ page_title }}
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="card-body" style="overflow-x: auto;" id="main-data-content-2">
+                            <div style="width: 100%;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>
+                        </div>
+                        <div class="card-body" style="overflow-x: auto;" id="main-data-content">
+                            <div style="width: 100%;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('statistic');
+    </script>
+    <script>
+        $( document ).ready(function() {
+            searchForm2();
+            {#searchForm();#}
+        });
+    </script>
+    <script>
+            var main_data_content = $('#main-data-content');
+            var main_data_content_2 = $('#main-data-content-2');
+            var package_search_form = $('#package-search-form');
+            function searchForm(){
+
+            main_data_content.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            $.post('',package_search_form.serialize())
+                .done(function (result) {
+                    main_data_content.html(result['main_result']);
+                });
+        }
+            function searchForm2(){
+            searchForm();
+            main_data_content_2.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            $.post('{% url 'panel:statistic-type' 'monthly-p2' %}',package_search_form.serialize())
+                .done(function (result) {
+                    main_data_content_2.html(result['main_result']);
+
+                });
+        }
+    </script>
+
+{% endblock %}

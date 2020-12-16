@@ -1,0 +1,10 @@
+{% load static %}
+
+<tr style="    background: darkkhaki;">
+    <th>{{ currencies_list_item.title }}</th>
+    {% for department_list_item in department_list %}
+        <th>{{ department_list_item.title }}</th>
+    {% endfor %}
+
+    <th style="    background: {{ color }};">Cəmi</th>
+</tr>

@@ -1,0 +1,40 @@
+{% load static %}{% load i18n %}
+<tr>
+    <td>
+        <a target="_blank" href="{% url 'panel:customer-edit' package_item.customer_id %}" style="color: #0a8dd3;">
+            {{ package_item.customer.full_name }}</a>
+    </td>
+    <td>
+        <a target="_blank" href="{% url 'panel:package-edit' package_item.id %}" style="color: #0a8dd3;">
+            {{ package_item.pledge_number }}</a></td>
+    <td>{{ package_item.debt_amount }} {{ package_item.currency.short_title }}{% if package_item.annuitet %}&nbsp;<span  style="padding: 2px 3px;background: green;color: #ffffff;">An</span>{% endif %}</td>
+
+    <td>{{ package_item.get_monthly_percent|floatformat:-2 }} {{ package_item.currency.short_title }}</td>
+    <td>
+        {{ package_item.last_payment_date|date:"d.m.Y" }}
+    </td>
+    <td style="{% if package_item.delay_day == 0 %}background: yellow;color: black;{% elif package_item.delay_day <= 31 %}background: red;{% elif package_item.delay_day > 31 and package_item.delay_day <= 60  %} background: #ac0404;color: white;{% elif package_item.delay_day > 60  %} background: #ac0404;color: white;{% else %} {% endif %}font-weight: bold;">
+        {{ package_item.delay_day }}
+    </td>
+    <td>
+    {% with  package_item.customer.get_phones as get_phones %}
+        {% if get_phones %}
+            {% for get_phone in package_item.customer.get_phones %}
+                <p>{{ get_phone.number }}</p>
+            {% endfor %}
+        {% else %}
+            N/A
+        {% endif %}
+    {% endwith %}
+
+    </td>
+    <td>
+        <input id="daily-note-{{ package_item.id }}" onkeyup="delayNoteWrite('{% url 'panel:package-daily-note' package_item.id %}',{{ package_item.id }})" class="form-control" value="{{ today_daily_note }}"/>
+    </td>
+    <td>{% if package_item.get_last_daily_note %}{{ package_item.get_last_daily_note.date|date:'d.m.Y' }}<hr style="margin: 0.1rem 0;"/>{{ package_item.get_last_daily_note.content }}{% endif %}</td>
+    <td>
+        <a target="_blank" class="" target="_blank" href="{% url 'panel:package-daily-list' package_item.id %}"><i class="fa fa-eye"></i></a>
+        <hr style="margin: 0.1rem 0;"/>
+        {{ package_item.notes }}
+    </td>
+</tr>

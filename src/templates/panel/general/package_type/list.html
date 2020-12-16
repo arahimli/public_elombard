@@ -1,0 +1,152 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+{% trans 'Paket tipləri' %}
+{% endblock %}
+{% block css_block %}
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <style>
+    .dt-buttons .dt-button{
+        padding:.5rem 1.6rem!important;
+        border-radius: 5px;
+        border:none;
+        cursor: pointer;
+        background: #8d8d8d;
+        color:#fff!important
+    }
+    .dt-buttons .dt-button:hover{
+        border:none;
+        background: #3a3d44;
+        color:#fff!important
+    }
+
+    </style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12 m-b-30">
+                    <!-- begin page title -->
+                    <div class="d-block d-sm-flex flex-nowrap align-items-center">
+                        <div class="page-title mb-2 mb-sm-0">
+                            <h1>
+                                {% trans "Paket tipləri" %}
+                            </h1>
+                        </div>
+                        <div class="ml-auto d-flex align-items-center">
+                            <nav>
+                                <ol class="breadcrumb p-0 m-b-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'panel:dashboard' %}"><i class="ti ti-home"></i></a>
+                                    </li>
+                                    <li class="breadcrumb-item active text-primary">
+                                        {% trans "Paket tipləri" %}
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end row -->
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {% trans "Paket tipləri" %}
+                                </h4>
+                            <hr/>
+                            <a class="btn btn-success" href="{% url 'panel:package_type-create' %}"> {% trans 'Əlavə et' %}</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>N</th>
+                                        <th>{% trans 'Başlıq' %}</th>
+                                        <th>{% trans 'Tip' %}</th>
+                                        <th>{% trans 'Ay sayı' %}</th>
+                                        <th>{% trans 'Tarix' %}</th>
+                                        <th>/</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for data_item in data_list %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ data_item.title }}</td>
+                                            <td>{{ data_item.type }}</td>
+                                            <td>{{ data_item.month_count }}</td>
+                                            <td>{{ data_item.date }}</td>
+                                            <td>
+                                                <a href="{% url 'panel:package_type-edit' data_item.id %}" class="btn btn-icon btn-square btn-warning">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'panel:package_type-remove' data_item.id %}" class="btn btn-icon btn-square btn-danger">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>N</th>
+                                        <th>{% trans 'Başlıq' %}</th>
+                                        <th>{% trans 'Tip' %}</th>
+                                        <th>{% trans 'Ay sayı' %}</th>
+                                        <th>{% trans 'Tarix' %}</th>
+                                        <th>/</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('advanced-datas');
+        activeMenu('advanced-datas-3');
+    </script>
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js "></script>
+    <script>
+    $(document).ready(function() {
+    var table = $('#example').DataTable( {
+        lengthChange: true,
+        buttons: [ 'copy', 'excel', 'pdf' ]
+    } );
+
+    table.buttons().container()
+        .appendTo( '#example_wrapper .col-md-6:eq(0)' );
+} );
+    </script>
+{% endblock %}

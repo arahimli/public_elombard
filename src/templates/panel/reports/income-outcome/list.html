@@ -1,0 +1,214 @@
+{% extends 'panel-base.html' %}
+{% load static %}{% load i18n %}
+{% block title_block %}
+    {{ title }}
+{% endblock %}
+{% block css_block %}
+    <style>
+        .customer-search-all-div tbody {
+            display:block;
+            max-height:350px;
+            overflow-y:auto;
+        }
+        .customer-search-all-div thead, .customer-search-all-div tbody tr {
+            display:table;
+            width:100%;
+            table-layout:fixed;
+        }
+        .customer-search-all-div thead {
+            width: calc( 100% - 1em )
+        }
+
+        #main-data-content-div { overflow: auto; height: 500px; }
+        #main-data-content-div thead th { position: sticky; top: 0; }
+
+        /* Just common table stuff. Really. */
+        #main-data-content-div table  { border-collapse: collapse; width: 100%; }
+        {# #main-data-content th, td { padding: 8px 16px; } #}
+        #main-data-content-div th     { background:#eee; }
+
+    </style>
+{% endblock %}
+{% block content_block %}
+    <!-- begin app-main -->
+    <div class="app-main" id="main">
+        <!-- begin container-fluid -->
+        <div class="container-fluid">
+
+            <div class="row">
+
+                <div class="col-xl-12" id="customer-search-all-div">
+                    <div class="card card-statistics">
+                        <div class="card-body">
+                            <form id="search-form" method="post">
+                                {% csrf_token %}
+                                <div class="form-row">
+
+                                    {% if base_profile.usertype != 2 %}
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                            {{ search_form.user }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                            {{ search_form.user_to }}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                            {{ search_form.title }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                            {{ search_form.currency }}
+                                        </div>
+                                    </div>
+
+                                    {% if base_profile.usertype != 2 %}
+                                        <div class="mb-3  col-md-3 ">
+                                             <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-01-01">
+                                                <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                {{ search_form.start_date }}
+                                            </div>
+                                        </div>
+                                        <div class="mb-3  col-md-3 ">
+                                             <div class=" input-group date display-years" data-date-format="yyyy-mm-dd" data-date="{{ now.year }}-{{ now.month|floatformat:-2 }}-{{ now.day|floatformat:-2 }}">
+                                                <span style="" class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                {{ search_form.end_date }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="col-md-3 mb-2">
+                                        <div class=" input-group">
+                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            {{ search_form.type }}
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="page-num" id="page-num" value="1"/>
+{#                                    <div class="col-md-3 mb-2">#}
+{#                                        <div class=" input-group">#}
+{#                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>#}
+{#                                            {{ search_form.amount_min }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="col-md-3 mb-2">#}
+{#                                        <div class=" input-group">#}
+{#                                            <span style="" class="input-group-addon"><i class="fa fa-money"></i></span>#}
+{#                                        {{ search_form.amount_max }}#}
+{#                                        </div>#}
+{#                                    </div>#}
+                                </div>
+                            </form>
+                            <hr/>
+                            <a class="btn btn-success " style="width: 100%;text-align:center;"  href="javascript:void(0);" onclick="searchForm();"> {% trans 'Axtar' %}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- begin row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-statistics">
+                        <div class="card-header">
+                            <div class="card-heading">
+                                <h4 class="card-title">
+                                    {{ title }}
+                                </h4>
+                                <hr/>
+                                <a class="btn btn-success" href="{% url 'panel:income-outcome-create' o_slug %}"> {% trans 'Daxil et' %}</a>
+
+                            </div>
+                        </div>
+                        <div class="card-body"  style="padding: 0 0 0 0;" id="main-data-content-div">
+                            <div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+    </div>
+    <!-- end app-main -->
+{% endblock %}
+{% block js_block %}
+    <script>
+        activeMenu('reports');
+    </script>
+
+
+    <script>
+        $( document ).ready(function() {
+            setTimeout(function(){ searchForm(); }, 1000);
+
+        });
+    </script>
+
+    <script>
+        var is_active = true;
+        var has_data = true;
+            $('#main-data-content-div').on('scroll', function() {
+                console.log("-------------------------------------------------------------------------------");
+                if ($(this).scrollTop() +
+                    $(this).innerHeight()>=
+                    $(this)[0].scrollHeight && is_active && has_data) {
+                    infinityForm();
+                    // alert('End of DIV is reached!');
+                }
+            });
+
+
+        function infinityForm() {
+            is_active = false;
+              $.post('',package_search_form.serialize())
+                  .done(function (result) {
+                      $('#main-data-content-div tbody').append(result['main_result']);
+                      if(result['main_result'] != ''){
+                          $('#page-num').val(parseInt($('#page-num').val()) + 1);
+                      }else{
+                          has_data = false;
+                      }
+                      is_active = true;
+
+                      console.log(result)
+                }).fail(function () {
+                    is_active = true;
+              });
+         }
+    </script>
+
+    <script>
+        var package_search_form = $('#search-form');
+        var main_data_content = $('#main-data-content-div');
+        var total_result_table = $('#total-result-table');
+
+        function searchForm() {
+          $('#page-num').val(1);
+            main_data_content.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+            total_result_table.html('<div style="width: 100%;text-align:center;"><img src="{% static 'main/assets/img/pageloader.gif' %}"></div>');
+              $.post('',package_search_form.serialize())
+                  .done(function (result) {
+                      main_data_content.html(result['result']);
+                      $('#page-num').val(2);
+                      total_result_table.html(result['total_html']);
+                      console.log(result)
+                }).fail(function () {
+                      main_data_content.html('');
+                      {#total_result_table.html('');#}
+              });
+        }
+    </script>
+{% endblock %}

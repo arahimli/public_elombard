@@ -1,0 +1,4 @@
+
+    <button id="new-payment-generate-button" {% if package_item.status in non_operate or is_readonly %}disabled{% else %}onclick="generateNewForm('{% url 'panel:package-payments-new-generate' package_item.id %}')"{% endif %} class="btn btn-success"  style="float: right;width: 300px;">
+        Yenisini daxil et
+    </button>

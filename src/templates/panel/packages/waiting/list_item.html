@@ -1,0 +1,63 @@
+{% load static %}
+
+    <tr>
+        <td>
+            <a target="_blank" href="{% url 'panel:package-edit' waiting_package_item.package.id %}" style="color: #0a8dd3;">
+                {{ waiting_package_item.package_id }}
+            </a>
+        </td>
+        <td>
+            <a target="_blank" href="{% url 'panel:customer-edit' waiting_package_item.package.customer_id %}" style="color: #0a8dd3;">
+                {{ waiting_package_item.package.customer.full_name }}
+            </a>
+        </td>
+        <td>{{ waiting_package_item.package.amount }} {{ waiting_package_item.package.currency.short_title }}</td>
+        <td>{{ waiting_package_item.package.get_pay_amount }} {{ waiting_package_item.package.currency.short_title }}</td>
+        <td>{{ waiting_package_item.package.debt_amount }} {{ waiting_package_item.package.currency.short_title }}</td>
+        <td>{{ waiting_package_item.package.percent }}</td>
+        <td>{{ waiting_package_item.package.get_monthly_percent|floatformat:-2 }} {{ waiting_package_item.package.currency.short_title }}</td>
+        <td>{{ waiting_package_item.package.total_debt_extra|floatformat:-2 }} {{ waiting_package_item.package.currency.short_title }}</td>
+
+        <td>
+            {{ waiting_package_item.package.get_last_payment|date:"d.m.Y" }}
+        </td>
+        <td style="{% if waiting_package_item.package.delay_day <= 0 %}{% elif waiting_package_item.package.delay_day <= 30 %}background: red;{% elif waiting_package_item.package.delay_day > 30 and waiting_package_item.package.delay_day <= 60  %} background: #ac0404;color: white;{% elif waiting_package_item.package.delay_day > 60  %} background: #ac0404;color: white;{% else %}{% endif %}font-weight: bold;">
+            {{ waiting_package_item.package.delay_day }}
+        </td>
+        <td>{{ waiting_package_item.package.department.title }}</td>
+        <td>{{ waiting_package_item.package.packet_type.title }}</td>
+        {% if type == 'deactive' %}
+            <td>
+                {% if waiting_package_item.package.status == 'active' %}
+                    <button class="btn btn-square btn-info">Aktiv</button>
+                {% elif waiting_package_item.package.status == 'waiting' %}
+                    <button class="btn btn-square btn-warning">Yoxlamada</button>
+                {% elif waiting_package_item.package.status == 'ordered' %}
+                    <button class="btn btn-square btn-primary">Sifarişə verildi</button>
+                {% elif waiting_package_item.package.status == 'saled' %}
+                    <button class="btn btn-square btn-danger">Satıldı</button>
+                {% elif waiting_package_item.package.status == 'closed' %}
+                    <button class="btn btn-square btn-success">Bağlandı</button>
+                {% elif waiting_package_item.package.status == 'paided' %}
+                    <button class="btn btn-square btn-secondary">Ödəmə tamamlandı</button>
+                {% else %}
+                {% endif %}
+            </td>
+        {% endif %}
+        <td>{{ waiting_package_item.date|date:'d.m.Y' }}</td>
+        <td>{{ waiting_package_item.package.first_date|date:'d.m.Y' }}</td>
+        <td>
+            {% if type == 'active' %}
+                <a href="{% url 'panel:package-edit' waiting_package_item.package.id %}" class="btn btn-square btn-info">
+                    <i class="fa fa-sticky-note-o"></i> Çıxar
+                </a>
+                {% if user and user.usertype == 1 %}
+                    <a href="{% url 'panel:package-waiting-edit' waiting_package_item.id %}"  class="btn btn-square btn-info">
+                        <i class="fa fa-sticky-note-o"></i> Dəyiş
+                    </a>
+                {% endif %}
+            {% else %}
+                {{ waiting_package_item.package.end_date|date:'d.m.Y' }}
+            {% endif %}
+        </td>
+    </tr>

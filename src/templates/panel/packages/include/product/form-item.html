@@ -1,0 +1,27 @@
+
+<div class="form-row" id="pt-list-item-{{ index }}">
+    <div class="form-group col-md-5">
+        <div class="input-group mb-12 mr-sm-12">
+         <div class="input-group-prepend">
+            <div class="input-group-text">Girov növü</div>
+        </div>
+        <select autocomplete="off" class="form-control" id="id_form-{{ index }}-product_type" name="form-{{ index }}-product_type" placeholder="Girov növü">
+            {% autoescape off %}
+                {{ options_html }}
+            {% endautoescape %}
+            
+        </select>
+        </div>
+    </div>
+    <div class="form-group col-md-5">
+        <div class="input-group mb-12 mr-sm-12">
+            <div class="input-group-prepend">
+                <div class="input-group-text">Girov miqdarı</div>
+            </div>
+            <input autocomplete="off" class="form-control" id="id_form-{{ index }}-product_amount" name="form-{{ index }}-product_amount" placeholder="Miqdar" step="0.01" type="number">
+        </div>
+    </div>
+    <div class="form-group col-md-2 btn btn-danger" onclick="$('#pt-list-item-{{ index }}').remove();">
+        x
+    </div>
+</div>
